@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>✏️</text></svg>">
+<title>TCF — Entraînement à l'Expression Écrite</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #f5f3ef;
+    --surface: #ffffff;
+    --surface2: #f0ede7;
+    --border: #e2ddd5;
+    --text: #1a1714;
+    --text-muted: #7a746b;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --accent-text: #ffffff;
+    --active-tab-shadow: 0 4px 20px rgba(37,99,235,0.25);
+    --shadow: 0 2px 12px rgba(0,0,0,0.06);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+    --radius: 14px;
+    --green: #16a34a;
+    --yellow: #d97706;
+    --red: #dc2626;
+    --timer-bg: #f0fdf4;
+    --timer-border: #bbf7d0;
+  }
+
+  [data-theme="dark"] {
+    --bg: #1e2130;
+    --surface: #262b3d;
+    --surface2: #2e3348;
+    --border: #3a4058;
+    --text: #e8eaf0;
+    --text-muted: #8b91a8;
+    --accent: #6a9eff;
+    --accent-hover: #4d85ff;
+    --accent-text: #ffffff;
+    --active-tab-shadow: 0 4px 20px rgba(106,158,255,0.30);
+    --shadow: 0 2px 12px rgba(0,0,0,0.25);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.35);
+    --timer-bg: #1a2e22;
+    --timer-border: #2a4a36;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
+    padding: 0 0 60px;
+  }
+
+  /* ── Header ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 48px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+
+  .logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .logo-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+    color: var(--text);
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn-clear {
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-clear:hover { color: var(--red); border-color: var(--red); background: var(--surface); }
+
+  .btn-export {
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-text);
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-export:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+  .btn-export:active { transform: translateY(0); }
+
+  .theme-toggle {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    transition: all 0.2s;
+    color: var(--text);
+  }
+
+  .theme-toggle:hover { background: var(--border); }
+
+  /* ── Tab Navigation ── */
+  .tab-nav-wrap {
+    padding: 24px 32px 0;
+    max-width: 1500px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .tab-nav {
+    display: flex;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px;
+    box-shadow: var(--shadow);
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .tab-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    font-family: 'Sora', sans-serif;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .tab-btn .tab-info { text-align: left; }
+  .tab-btn .tab-num { font-size: 12px; font-weight: 600; letter-spacing: 0.05em; opacity: 0.7; }
+  .tab-btn .tab-name { font-size: 14px; font-weight: 600; display: block; }
+  .tab-btn .tab-type { font-size: 11px; display: block; font-weight: 400; margin-top: 1px; }
+
+  .tab-btn .mic-icon {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+    transition: all 0.22s;
+  }
+
+  .tab-btn.active {
+    background: var(--accent);
+    color: var(--accent-text);
+    box-shadow: var(--active-tab-shadow);
+    font-weight: 500;
+  }
+
+  .tab-btn.active .tab-num { opacity: 0.8; }
+  .tab-btn.active .mic-icon { background: rgba(255,255,255,0.2); }
+  .tab-btn.done .mic-icon::after { content: '✓'; }
+  .tab-btn.done:not(.active) .mic-icon { background: #dcfce7; color: var(--green); }
+
+  /* ── Main Content ── */
+  main {
+    padding: 24px 32px 60px;
+    max-width: 1500px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .task-panel { display: none; }
+  .task-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── Task Card ── */
+  .task-card {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+    box-shadow: none;
+    margin-bottom: 20px;
+  }
+
+  .task-card-header {
+    padding: 12px 0 14px;
+    border-bottom: none;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 4px;
+  }
+
+  .task-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .badge-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .badge-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .task-card-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--text);
+    font-weight: 400;
+    font-style: italic;
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+
+  .word-target {
+    flex-shrink: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    text-align: center;
+  }
+
+  .word-target .wt-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--accent);
+    display: block;
+    line-height: 1;
+  }
+
+  .word-target .wt-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 3px;
+    display: block;
+  }
+
+  /* ── Prompt Field ── */
+  .field-section {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .field-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .field-label span { font-size: 14px; }
+
+  textarea {
+    width: 100%;
+    font-family: 'Sora', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    resize: vertical;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+  textarea::placeholder { color: var(--text-muted); opacity: 0.6; }
+  textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+  textarea.prompt-area { min-height: 100px; font-size: 16px; line-height: 1.6; }
+  textarea.response-area { min-height: 220px; font-size: 16px; }
+
+  /* ── Footer Row ── */
+  .response-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px 20px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* ── Timer ── */
+  .timer-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--timer-bg);
+    border: 1px solid var(--timer-border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-width: 130px;
+  }
+
+  .timer-icon { font-size: 15px; }
+
+  .timer-time {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--green);
+    letter-spacing: 0.04em;
+    min-width: 62px;
+  }
+
+  .timer-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  /* ── Word Count & Actions Wrap ── */
+  .wordcount-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .wc-bar-wrap {
+    flex: 1;
+    min-width: 120px;
+    max-width: 220px;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 99px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .wc-bar {
+    height: 100%;
+    border-radius: 99px;
+    width: 0%;
+    transition: width 0.3s ease, background-color 0.3s;
+    background: var(--accent);
+  }
+
+  .wc-bar.over { background: var(--red); }
+  .wc-bar.near { background: var(--green); }
+  .wc-bar.warn { background: var(--yellow); }
+
+  .wc-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .wc-text .wc-current {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: 'DM Serif Display', serif;
+  }
+
+  .wc-text .wc-status {
+    display: inline-block;
+    margin-left: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 5px;
+  }
+
+  .status-ok { background: #dcfce7; color: var(--green); }
+  .status-low { background: #fef3c7; color: var(--yellow); }
+  .status-over { background: #fee2e2; color: var(--red); }
+
+  /* ── Navigation & Action Buttons ── */
+  .btn-next {
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-text);
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-next:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+  .btn-save-task {
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ffffff;
+    background: var(--green);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-save-task:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+  /* ── Save indicator ── */
+  .save-indicator {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    opacity: 0;
+    transition: opacity 0.4s;
+    text-transform: uppercase;
+  }
+
+  .save-indicator.show { opacity: 1; }
+
+  /* ── Progress summary ── */
+  .progress-bar-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    box-shadow: var(--shadow);
+    margin-top: 4px;
+    margin-bottom: 20px;
+  }
+
+  .progress-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+
+  .progress-tasks {
+    display: flex;
+    gap: 10px;
+  }
+
+  .progress-task {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .progress-task:hover { border-color: var(--accent); }
+  .progress-task.completed { border-color: var(--green); background: #f0fdf4; }
+  [data-theme="dark"] .progress-task.completed { background: #052e16; }
+
+  .pt-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .pt-words { font-size: 11px; color: var(--text-muted); }
+  .pt-check { float: right; color: var(--green); font-size: 16px; }
+
+  /* ── History Section ── */
+  .history-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    box-shadow: var(--shadow);
+  }
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .history-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .history-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    position: relative;
+  }
+  .history-card .hc-tag {
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--accent);
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+  .history-card .hc-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    float: right;
+  }
+  .history-card .hc-body {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 6px;
+    margin-bottom: 40px; /* Space for the explicit delete button */
+  }
+  .history-card .hc-delete {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    background: var(--red);
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.2s;
+  }
+  .history-card .hc-delete:hover { filter: brightness(0.9); }
+  
+  .no-history {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .consigne-sub-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  /* ── Two-column task layout ── */
+  .task-body {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    min-height: 0;
+  }
+
+  .task-left {
+    flex: 0 0 32%;
+    padding: 20px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+  }
+
+  .task-right {
+    flex: 1;
+    margin-left: 0;
+    padding: 20px 24px 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .task-right .field-label {
+    margin-bottom: 10px;
+  }
+
+  .task-right textarea.response-area {
+    flex: 1;
+    min-height: 300px;
+    resize: none;
+  }
+
+  .task-right .response-footer {
+    border-top: 1px solid var(--border);
+    margin: 0 -24px;
+    padding: 12px 24px 16px;
+  }
+
+  /* Titre field compact */
+  textarea.titre-area {
+    min-height: unset !important;
+    height: auto !important;
+    font-size: 15px !important;
+    font-weight: 600;
+    resize: none;
+    rows: 1;
+  }
+
+  .timer-buttons {
+    display: flex;
+    gap: 5px;
+    margin-left: 6px;
+  }
+
+  .btn-timer {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    cursor: pointer;
+    font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    color: var(--text-muted);
+    padding: 0;
+  }
+
+  .btn-timer:hover { background: var(--border); color: var(--text); }
+  .btn-timer.paused { background: #fef3c7; border-color: #d97706; color: #d97706; }
+  .btn-timer-reset:hover { border-color: var(--red); color: var(--red); }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  @media (max-width: 680px) {
+    header { padding: 16px 20px; }
+    .tab-nav-wrap { padding: 16px 20px 0; }
+    main { padding: 20px 20px; }
+    .tab-btn .tab-type { display: none; }
+    .tab-nav { gap: 6px; padding: 6px; }
+    .task-card-header { flex-direction: column; }
+    .response-footer { flex-direction: column; align-items: flex-start; }
+    .wordcount-wrap { width: 100%; justify-content: flex-start; }
+  }
+
+  /* ══ AI Correction ══ */
+  .btn-ai {
+    font-family: 'Sora', sans-serif;
+    font-size: 12px; font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #7c3aed, #4338ca);
+    border: none; border-radius: 8px;
+    padding: 8px 13px; cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 5px;
+    white-space: nowrap;
+  }
+  .btn-ai:hover { filter: brightness(1.13); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(124,58,237,.35); }
+  .btn-ai:disabled { opacity: .55; cursor: not-allowed; transform: none; filter: none; }
+
+  .ai-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.55); z-index: 1000;
+    align-items: center; justify-content: center;
+    padding: 20px; backdrop-filter: blur(3px);
+  }
+  .ai-overlay.open { display: flex; }
+
+  .ai-modal {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,.28);
+    max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto;
+    animation: aiIn .28s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes aiIn { from { opacity:0; transform: scale(.93) translateY(10px); } to { opacity:1; transform: scale(1) translateY(0); } }
+
+  .ai-mhead {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 24px 16px; border-bottom: 1px solid var(--border);
+  }
+  .ai-mhead h3 {
+    font-family: 'DM Serif Display', serif; font-size: 19px; font-style: italic;
+    color: var(--text); display: flex; align-items: center; gap: 9px;
+  }
+  .ai-mclose {
+    width: 32px; height: 32px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface2);
+    cursor: pointer; font-size: 16px; color: var(--text-muted);
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+  }
+  .ai-mclose:hover { background: var(--border); color: var(--text); }
+
+  .ai-mbody { padding: 20px 24px 26px; }
+
+  .ai-keyrow {
+    display: flex; gap: 8px; margin-bottom: 14px; align-items: center;
+  }
+  .ai-keyrow input {
+    flex: 1; font-family: 'Sora', sans-serif; font-size: 13px;
+    padding: 9px 13px; border-radius: 8px;
+    border: 1.5px solid var(--border); background: var(--surface2);
+    color: var(--text); outline: none; transition: border-color .2s;
+  }
+  .ai-keyrow input:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,.12); }
+  .ai-key-hint {
+    font-size: 11px; color: var(--text-muted); margin-bottom: 14px; margin-top: -6px;
+  }
+  .ai-key-hint a { color: var(--accent); text-decoration: none; }
+  .ai-key-hint a:hover { text-decoration: underline; }
+
+  .ai-err {
+    background: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px;
+    padding: 11px 15px; font-size: 13px; color: #b91c1c;
+    margin-bottom: 12px; display: none;
+  }
+  .ai-err.show { display: block; }
+
+  .ai-spin-wrap { text-align: center; padding: 32px; display: none; }
+  .ai-spin-wrap.show { display: block; }
+  .ai-spinner {
+    width: 36px; height: 36px; border: 3px solid var(--border);
+    border-top-color: #7c3aed; border-radius: 50%;
+    animation: spin .8s linear infinite; margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .ai-res { display: none; }
+  .ai-res.show { display: block; }
+
+  .clb-badge {
+    display: flex; align-items: center; gap: 16px;
+    background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+    border: 1.5px solid #c4b5fd; border-radius: 14px;
+    padding: 18px 22px; margin-bottom: 18px;
+  }
+  [data-theme="dark"] .clb-badge {
+    background: linear-gradient(135deg,#1e1b4b,#2e1d69);
+    border-color: #5b21b6;
+  }
+  .clb-note {
+    font-family: 'DM Serif Display', serif; font-size: 50px;
+    color: #7c3aed; line-height: 1; min-width: 90px; text-align: center;
+  }
+  .clb-info { flex: 1; }
+  .clb-lbl { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #7c3aed; margin-bottom: 2px; }
+  .clb-title { font-size: 20px; font-weight: 700; color: var(--text); }
+  .clb-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 7px; }
+  .clb-prog { height: 7px; background: var(--surface2); border-radius: 99px; overflow: hidden; border: 1px solid var(--border); }
+  .clb-prog-bar { height: 100%; border-radius: 99px; background: linear-gradient(90deg,#7c3aed,#4338ca); transition: width .9s ease; }
+
+  .ai-section {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 15px 17px; margin-bottom: 11px;
+  }
+  .ai-section-title {
+    font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 9px; display: flex; align-items: center; gap: 6px;
+  }
+  .ai-section p, .ai-section li { font-size: 14px; line-height: 1.65; color: var(--text); }
+  .ai-section ul { padding-left: 18px; }
+  .ai-section li { margin-bottom: 5px; }
+  .ai-sec-green  { border-left: 3px solid var(--green); }
+  .ai-sec-yellow { border-left: 3px solid var(--yellow); }
+  .ai-sec-red    { border-left: 3px solid var(--red); }
+  .ai-sec-purple { border-left: 3px solid #7c3aed; }
+  .ai-sec-blue   { border-left: 3px solid var(--accent); }
+</style>
+</head>
+<body data-theme="light">
+
+<header>
+  <div class="logo">
+    <span class="logo-label">TCF Canada</span>
+    <span style="color:var(--border);font-size:14px">·</span>
+    <span class="logo-title">Expression Écrite</span>
+  </div>
+  <div class="header-actions">
+    <span class="save-indicator" id="saveIndicator">💾 Sauvegardé</span>
+    <button class="btn-export" onclick="exportToWord()" title="Exportar para Word">📄 Exportar .docx</button>
+    <button class="btn-clear" onclick="clearAll()">Effacer tout</button>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Changer le thème">🌙</button>
+  </div>
+</header>
+
+<!-- Tab Navigation -->
+<div class="tab-nav-wrap">
+  <div class="tab-nav">
+    <button class="tab-btn active" id="tab-0" onclick="switchTab(0)">
+      <div class="mic-icon">✏️</div>
+      <div class="tab-info">
+        <span class="tab-num">TÂCHE 1</span>
+        <span class="tab-name">Message court</span>
+        <span class="tab-type">60 – 120 mots</span>
+      </div>
+    </button>
+    <button class="tab-btn" id="tab-1" onclick="switchTab(1)">
+      <div class="mic-icon">📝</div>
+      <div class="tab-info">
+        <span class="tab-num">TÂCHE 2</span>
+        <span class="tab-name">Narration</span>
+        <span class="tab-type">120 – 150 mots</span>
+      </div>
+    </button>
+    <button class="tab-btn" id="tab-2" onclick="switchTab(2)">
+      <div class="mic-icon">💬</div>
+      <div class="tab-info">
+        <span class="tab-num">TÂCHE 3</span>
+        <span class="tab-name">Argumentation</span>
+        <span class="tab-type">120 – 180 mots</span>
+      </div>
+    </button>
+  </div>
+</div>
+
+<main>
+
+  <!-- TÂCHE 1 -->
+  <div class="task-panel active" id="panel-0">
+    <div class="task-card">
+      <div class="task-body">
+        <div class="task-left">
+          <div>
+            <div class="field-label"><span>📋</span> Consigne / Énoncé</div>
+            <textarea class="prompt-area" id="prompt-0" placeholder="Collez ici l'énoncé de la tâche (sujet, instructions, contexte)…" oninput="savePrompt(0)" rows="8" style="min-height:160px"></textarea>
+          </div>
+        </div>
+        <div class="task-right">
+          <div class="field-label"><span>✍️</span> Votre réponse</div>
+          <textarea class="response-area" id="response-0" placeholder="Commencez à écrire votre réponse ici… Le chronomètre démarre automatiquement." oninput="onResponseInput(0)"></textarea>
+          <div class="response-footer">
+            <div class="timer-display">
+              <span class="timer-icon">⏱</span>
+              <div>
+                <div class="timer-time" id="timer-0">00:00</div>
+                <div class="timer-label">Temps</div>
+              </div>
+              <div class="timer-buttons">
+                <button class="btn-timer" id="btn-pause-0" onclick="togglePause(0)" title="Pausar/Retomar">⏸</button>
+                <button class="btn-timer btn-timer-reset" onclick="resetTimer(0)" title="Resetar">↺</button>
+              </div>
+            </div>
+            <div class="wordcount-wrap">
+              <button class="btn-save-task" onclick="archiveTask(0)">💾 Sauvegarder & Reset</button>
+              <button class="btn-ai" id="ai-btn-0" onclick="aiOpen(0)">✨ Corriger avec IA</button>
+              <div class="wc-bar-wrap"><div class="wc-bar" id="bar-0"></div></div>
+              <div class="wc-text">
+                <span class="wc-current" id="count-0">0</span>
+                <span> / 120 mots</span>
+                <span class="wc-status status-low" id="status-0">Trop court</span>
+              </div>
+              <button class="btn-next" onclick="switchTab(1)">Prochaine ➔</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TÂCHE 2 -->
+  <div class="task-panel" id="panel-1">
+    <div class="task-card">
+      <div class="task-body">
+        <div class="task-left">
+          <div>
+            <div class="field-label"><span>📋</span> Consigne / Énoncé</div>
+            <textarea class="prompt-area" id="prompt-1" placeholder="Collez ici l'énoncé de la tâche…" oninput="savePrompt(1)" rows="8" style="min-height:160px"></textarea>
+          </div>
+        </div>
+        <div class="task-right">
+          <div class="field-label"><span>✍️</span> Votre réponse</div>
+          <textarea class="response-area" id="response-1" placeholder="Commencez à écrire votre réponse ici… Le chronomètre démarre automatiquement." oninput="onResponseInput(1)"></textarea>
+          <div class="response-footer">
+            <div class="timer-display">
+              <span class="timer-icon">⏱</span>
+              <div>
+                <div class="timer-time" id="timer-1">00:00</div>
+                <div class="timer-label">Temps</div>
+              </div>
+              <div class="timer-buttons">
+                <button class="btn-timer" id="btn-pause-1" onclick="togglePause(1)" title="Pausar/Retomar">⏸</button>
+                <button class="btn-timer btn-timer-reset" onclick="resetTimer(1)" title="Resetar">↺</button>
+              </div>
+            </div>
+            <div class="wordcount-wrap">
+              <button class="btn-save-task" onclick="archiveTask(1)">💾 Sauvegarder & Reset</button>
+              <button class="btn-ai" id="ai-btn-1" onclick="aiOpen(1)">✨ Corriger avec IA</button>
+              <div class="wc-bar-wrap"><div class="wc-bar" id="bar-1"></div></div>
+              <div class="wc-text">
+                <span class="wc-current" id="count-1">0</span>
+                <span> / 150 mots</span>
+                <span class="wc-status status-low" id="status-1">Trop court</span>
+              </div>
+              <button class="btn-next" onclick="switchTab(2)">Prochaine ➔</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TÂCHE 3 -->
+  <div class="task-panel" id="panel-2">
+    <div class="task-card">
+      <div class="task-body">
+        <div class="task-left">
+          <div>
+            <div class="field-label"><span>📋</span> Consigne / Énoncé</div>
+            <div class="consigne-sub-label">Titre</div>
+            <textarea class="prompt-area titre-area" id="prompt-2-titre" placeholder="Titre du sujet…" oninput="savePrompt(2)" rows="1" style="min-height:unset;font-size:15px;font-weight:600"></textarea>
+            <div class="consigne-sub-label" style="margin-top:12px">Document 1</div>
+            <textarea class="prompt-area" id="prompt-2-doc1" placeholder="Contenu du document 1…" oninput="savePrompt(2)" rows="4" style="font-size:13px"></textarea>
+            <div class="consigne-sub-label" style="margin-top:12px">Document 2</div>
+            <textarea class="prompt-area" id="prompt-2-doc2" placeholder="Contenu du documento 2…" oninput="savePrompt(2)" rows="4" style="font-size:13px"></textarea>
+          </div>
+        </div>
+        <div class="task-right">
+          <div class="field-label"><span>✍️</span> Votre réponse</div>
+          <textarea class="response-area" id="response-2" placeholder="Commencez à écrire votre réponse ici… Le chronomètre démarre automatiquement." oninput="onResponseInput(2)"></textarea>
+          <div class="response-footer">
+            <div class="timer-display">
+              <span class="timer-icon">⏱</span>
+              <div>
+                <div class="timer-time" id="timer-2">00:00</div>
+                <div class="timer-label">Temps</div>
+              </div>
+              <div class="timer-buttons">
+                <button class="btn-timer" id="btn-pause-2" onclick="togglePause(2)" title="Pausar/Retomar">⏸</button>
+                <button class="btn-timer btn-timer-reset" onclick="resetTimer(2)" title="Resetar">↺</button>
+              </div>
+            </div>
+            <div class="wordcount-wrap">
+              <button class="btn-save-task" onclick="archiveTask(2)">💾 Sauvegarder & Reset</button>
+              <button class="btn-ai" id="ai-btn-2" onclick="aiOpen(2)">✨ Corriger avec IA</button>
+              <div class="wc-bar-wrap"><div class="wc-bar" id="bar-2"></div></div>
+              <div class="wc-text">
+                <span class="wc-current" id="count-2">0</span>
+                <span> / 180 mots</span>
+                <span class="wc-status status-low" id="status-2">Trop court</span>
+              </div>
+              <button class="btn-next" onclick="switchTab(0)">Tâche 1 ➔</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Summary -->
+  <div class="progress-bar-wrap">
+    <div class="progress-title">📊 Progression de la session</div>
+    <div class="progress-tasks">
+      <div class="progress-task" id="prog-0" onclick="switchTab(0)">
+        <span class="pt-check" id="check-0"></span>
+        <div class="pt-name">Tâche 1</div>
+        <div class="pt-words" id="prog-words-0">0 mots</div>
+      </div>
+      <div class="progress-task" id="prog-1" onclick="switchTab(1)">
+        <span class="pt-check" id="check-1"></span>
+        <div class="pt-name">Tâche 2</div>
+        <div class="pt-words" id="prog-words-1">0 mots</div>
+      </div>
+      <div class="progress-task" id="prog-2" onclick="switchTab(2)">
+        <span class="pt-check" id="check-2"></span>
+        <div class="pt-name">Tâche 3</div>
+        <div class="pt-words" id="prog-words-2">0 mots</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Log Section -->
+  <div class="history-wrap">
+    <div class="history-header">
+      <div class="progress-title" style="margin-bottom:0">📁 Textes Sauvés / Historique</div>
+    </div>
+    <div class="history-container" id="historyContainer">
+      <!-- Saved items loaded dynamically via JS -->
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // ── Config ──
+  const TASKS = [
+    { min: 60, max: 120 },
+    { min: 120, max: 150 },
+    { min: 120, max: 180 }
+  ];
+
+  let currentTab = 0;
+  let timers = [null, null, null];
+  let seconds = [0, 0, 0];
+  let timerStarted = [false, false, false];
+  let timerPaused = [false, false, false];
+  let saveTimeout = null;
+  let aiLastResult = [null, null, null]; // stores last AI correction per task
+
+  // ── Init ──
+  window.onload = () => {
+    loadAll();
+    loadHistory();
+    const theme = localStorage.getItem('tcf_theme') || 'light';
+    setTheme(theme);
+  };
+
+  // ── Tabs ──
+  function switchTab(i) {
+    document.querySelectorAll('.tab-btn').forEach((b, idx) => b.classList.toggle('active', idx === i));
+    document.querySelectorAll('.task-panel').forEach((p, idx) => p.classList.toggle('active', idx === i));
+    currentTab = i;
+  }
+
+  // ── Theme ──
+  function toggleTheme() {
+    const current = document.body.getAttribute('data-theme');
+    setTheme(current === 'light' ? 'dark' : 'light');
+  }
+
+  function setTheme(theme) {
+    document.body.setAttribute('data-theme', theme);
+    document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️' : '🌙';
+    localStorage.setItem('tcf_theme', theme);
+  }
+
+  // ── Timer ──
+  function startTimer(i) {
+    if (timerStarted[i] || timerPaused[i]) return;
+    timerStarted[i] = true;
+    timers[i] = setInterval(() => {
+      seconds[i]++;
+      const m = String(Math.floor(seconds[i] / 60)).padStart(2, '0');
+      const s = String(seconds[i] % 60).padStart(2, '0');
+      document.getElementById(`timer-${i}`).textContent = `${m}:${s}`;
+      saveTimerState(i);
+    }, 1000);
+  }
+
+  function togglePause(i) {
+    const btn = document.getElementById(`btn-pause-${i}`);
+    if (!timerStarted[i] && !timerPaused[i]) return; 
+    if (timerPaused[i]) {
+      timerPaused[i] = false;
+      timers[i] = setInterval(() => {
+        seconds[i]++;
+        const m = String(Math.floor(seconds[i] / 60)).padStart(2, '0');
+        const s = String(seconds[i] % 60).padStart(2, '0');
+        document.getElementById(`timer-${i}`).textContent = `${m}:${s}`;
+        saveTimerState(i);
+      }, 1000);
+      btn.textContent = '⏸';
+      btn.classList.remove('paused');
+      btn.title = 'Pausar';
+    } else {
+      clearInterval(timers[i]);
+      timers[i] = null;
+      timerPaused[i] = true;
+      btn.textContent = '▶';
+      btn.classList.add('paused');
+      btn.title = 'Retomar';
+    }
+  }
+
+  function resetTimer(i) {
+    clearInterval(timers[i]);
+    timers[i] = null;
+    seconds[i] = 0;
+    timerStarted[i] = false;
+    timerPaused[i] = false;
+    document.getElementById(`timer-${i}`).textContent = '00:00';
+    const btn = document.getElementById(`btn-pause-${i}`);
+    btn.textContent = '⏸';
+    btn.classList.remove('paused');
+    btn.title = 'Pausar';
+    localStorage.removeItem(`tcf_timer_${i}`);
+  }
+
+  // ── Word count & bar ──
+  function countWords(text) {
+    return text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+  }
+
+  // ── Trigger save animation ──
+  function triggerSaveIndicator() {
+    const ind = document.getElementById('saveIndicator');
+    ind.classList.add('show');
+    setTimeout(() => ind.classList.remove('show'), 2000);
+  }
+
+  function updateWordCount(i) {
+    const text = document.getElementById(`response-${i}`).value;
+    const words = countWords(text);
+    const { min, max } = TASKS[i];
+    const bar = document.getElementById(`bar-${i}`);
+    const countEl = document.getElementById(`count-${i}`);
+    const statusEl = document.getElementById(`status-${i}`);
+
+    countEl.textContent = words;
+
+    const pct = Math.min((words / max) * 100, 110);
+    bar.style.width = pct + '%';
+
+    if (words < min) {
+      bar.className = 'wc-bar warn';
+      statusEl.className = 'wc-status status-low';
+      statusEl.textContent = 'Trop court';
+    } else if (words <= max) {
+      bar.className = 'wc-bar near';
+      statusEl.className = 'wc-status status-ok';
+      statusEl.textContent = '✓ Objectif';
+    } else {
+      bar.className = 'wc-bar over';
+      statusEl.className = 'wc-status status-over';
+      statusEl.textContent = 'Trop long';
+    }
+
+    document.getElementById(`prog-words-${i}`).textContent = `${words} mots`;
+    const done = words >= min && words <= max;
+    document.getElementById(`prog-${i}`).classList.toggle('completed', done);
+    document.getElementById(`check-${i}`).textContent = done ? '✓' : '';
+    const tabBtn = document.getElementById(`tab-${i}`);
+    if (done) tabBtn.classList.add('done'); else tabBtn.classList.remove('done');
+  }
+
+  // ── Input handlers ──
+  function onResponseInput(i) {
+    if (!timerStarted[i]) startTimer(i);
+    updateWordCount(i);
+    scheduleSave();
+  }
+
+  function savePrompt(i) {
+    scheduleSave();
+  }
+
+  // ── Persistence ──
+  function scheduleSave() {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(saveAll, 800);
+  }
+
+  function saveAll() {
+    for (let i = 0; i < 3; i++) {
+      if (i === 2) {
+        localStorage.setItem('tcf_prompt_2_titre', document.getElementById('prompt-2-titre').value);
+        localStorage.setItem('tcf_prompt_2_doc1', document.getElementById('prompt-2-doc1').value);
+        localStorage.setItem('tcf_prompt_2_doc2', document.getElementById('prompt-2-doc2').value);
+      } else {
+        localStorage.setItem(`tcf_prompt_${i}`, document.getElementById(`prompt-${i}`).value);
+      }
+      localStorage.setItem(`tcf_response_${i}`, document.getElementById(`response-${i}`).value);
+    }
+    triggerSaveIndicator();
+  }
+
+  function saveTimerState(i) {
+    localStorage.setItem(`tcf_timer_${i}`, seconds[i]);
+  }
+
+  function loadAll() {
+    for (let i = 0; i < 3; i++) {
+      if (i === 2) {
+        document.getElementById('prompt-2-titre').value = localStorage.getItem('tcf_prompt_2_titre') || '';
+        document.getElementById('prompt-2-doc1').value = localStorage.getItem('tcf_prompt_2_doc1') || '';
+        document.getElementById('prompt-2-doc2').value = localStorage.getItem('tcf_prompt_2_doc2') || '';
+      } else {
+        document.getElementById(`prompt-${i}`).value = localStorage.getItem(`tcf_prompt_${i}`) || '';
+      }
+      const response = localStorage.getItem(`tcf_response_${i}`) || '';
+      const savedSecs = parseInt(localStorage.getItem(`tcf_timer_${i}`)) || 0;
+
+      document.getElementById(`response-${i}`).value = response;
+      updateWordCount(i);
+
+      if (savedSecs > 0) {
+        seconds[i] = savedSecs;
+        const m = String(Math.floor(savedSecs / 60)).padStart(2, '0');
+        const s = String(savedSecs % 60).padStart(2, '0');
+        document.getElementById(`timer-${i}`).textContent = `${m}:${s}`;
+        if (response.trim().length > 0) {
+          timerStarted[i] = true;
+          timers[i] = setInterval(() => {
+            seconds[i]++;
+            const mm = String(Math.floor(seconds[i] / 60)).padStart(2, '0');
+            const ss = String(seconds[i] % 60).padStart(2, '0');
+            document.getElementById(`timer-${i}`).textContent = `${mm}:${ss}`;
+            saveTimerState(i);
+          }, 1000);
+        }
+      }
+    }
+  }
+
+  // ── Advanced Local History Archive & Reset Features (Silent Auto-Save) ──
+  function archiveTask(i) {
+    let promptText = "";
+    if (i === 2) {
+      const titre = document.getElementById('prompt-2-titre').value.trim();
+      const d1 = document.getElementById('prompt-2-doc1').value.trim();
+      const d2 = document.getElementById('prompt-2-doc2').value.trim();
+      if (!titre && !d1 && !d2) return; // Silent guard
+      promptText = `Titre: ${titre}\nDoc 1: ${d1}\nDoc 2: ${d2}`;
+    } else {
+      promptText = document.getElementById(`prompt-${i}`).value.trim();
+      if (!promptText) return; // Silent guard
+    }
+
+    const responseText = document.getElementById(`response-${i}`).value.trim();
+    if (!responseText) return; // Silent guard
+
+    const wordCount = countWords(responseText);
+    const timeSpent = document.getElementById(`timer-${i}`).textContent;
+    const timestamp = new Date().toLocaleString('fr-FR');
+
+    const entry = {
+      id: Date.now(),
+      taskNum: i + 1,
+      prompt: promptText,
+      response: responseText,
+      words: wordCount,
+      time: timeSpent,
+      date: timestamp,
+      aiNote: aiLastResult[i] ? aiLastResult[i].note : null,
+      aiClb:  aiLastResult[i] ? (CLB_LEVELS[aiLastResult[i].score] && CLB_LEVELS[aiLastResult[i].score].label) : null,
+      aiResume: aiLastResult[i] ? aiLastResult[i].resume : null
+    };
+
+    let history = JSON.parse(localStorage.getItem('tcf_archive_history')) || [];
+    history.unshift(entry);
+    localStorage.setItem('tcf_archive_history', JSON.stringify(history));
+
+    // Reset fields for this specific task
+    resetTimer(i);
+    document.getElementById(`response-${i}`).value = '';
+    if (i === 2) {
+      document.getElementById('prompt-2-titre').value = '';
+      document.getElementById('prompt-2-doc1').value = '';
+      document.getElementById('prompt-2-doc2').value = '';
+      localStorage.removeItem('tcf_prompt_2_titre');
+      localStorage.removeItem('tcf_prompt_2_doc1');
+      localStorage.removeItem('tcf_prompt_2_doc2');
+    } else {
+      document.getElementById(`prompt-${i}`).value = '';
+      localStorage.removeItem(`tcf_prompt_${i}`);
+    }
+    localStorage.removeItem(`tcf_response_${i}`);
+    localStorage.removeItem(`tcf_timer_${i}`);
+
+    aiLastResult[i] = null;
+    updateWordCount(i);
+    loadHistory();
+    triggerSaveIndicator(); // Visual cue in header instead of a blocking popup
+  }
+
+  function loadHistory() {
+    const container = document.getElementById('historyContainer');
+    const history = JSON.parse(localStorage.getItem('tcf_archive_history')) || [];
+
+    if (history.length === 0) {
+      container.innerHTML = '<div class="no-history">Aucun texte archivé pour le moment.</div>';
+      return;
+    }
+
+    container.innerHTML = history.map(item => `
+      <div class="history-card" id="hc-${item.id}">
+        <span class="hc-tag">Tâche ${item.taskNum}</span>
+        ${item.aiNote ? `<span style="display:inline-block;margin-left:6px;background:linear-gradient(135deg,#7c3aed,#4338ca);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.06em;">✨ ${item.aiNote} · ${item.aiClb}</span>` : ''}
+        <span class="hc-meta">⏱ ${item.time} | 📝 ${item.words} mots | 📅 ${item.date}</span>
+        ${item.aiResume ? `<div style="margin:8px 0 4px;padding:8px 12px;background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1px solid #c4b5fd;border-radius:8px;font-size:12px;color:#5b21b6;font-style:italic;">${escHtml(item.aiResume)}</div>` : ''}
+        <div class="hc-body">
+          <strong>Énoncé :</strong><br>
+          <p style="white-space: pre-wrap; font-style: italic; color: var(--text-muted); margin-bottom:8px;">${escHtml(item.prompt)}</p>
+          <strong>Réponse :</strong><br>
+          <p style="white-space: pre-wrap; background: var(--surface); padding: 10px; border-radius: 6px; border: 1px solid var(--border); margin-top:4px;">${escHtml(item.response)}</p>
+        </div>
+        <button class="hc-delete" onclick="deleteHistoryItem(${item.id})" title="Supprimer définitivement">🗑 Supprimer</button>
+      </div>
+    `).join('');
+  }
+
+  function deleteHistoryItem(id) {
+    if (!confirm("Voulez-vous vraiment supprimer définitivement ce texte de votre historique ?")) return;
+    let history = JSON.parse(localStorage.getItem('tcf_archive_history')) || [];
+    history = history.filter(item => item.id !== id);
+    localStorage.setItem('tcf_archive_history', JSON.stringify(history));
+    loadHistory();
+  }
+
+  // ── Export to Word ──
+  function exportToWord() {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+    const fileName = `TCF_Expression_Ecrite_${now.toISOString().slice(0,10)}.doc`;
+
+    const taskNames = [
+      'Tâche 1 — Message court (60–120 mots)',
+      'Tâche 2 — Narration (120–150 mots)',
+      'Tâche 3 — Argumentation (120–180 mots)'
+    ];
+
+    let tasksHtml = '';
+    for (let i = 0; i < 3; i++) {
+      let prompt = '';
+      if (i === 2) {
+        const titre = document.getElementById('prompt-2-titre').value.trim();
+        const doc1 = document.getElementById('prompt-2-doc1').value.trim();
+        const doc2 = document.getElementById('prompt-2-doc2').value.trim();
+        if (titre) prompt += `<p><strong>Titre :</strong> ${escHtml(titre)}</p>`;
+        if (doc1)  prompt += `<p><strong>Document 1 :</strong><br>${escHtml(doc1).replace(/\n/g,'<br>')}</p>`;
+        if (doc2)  prompt += `<p><strong>Document 2 :</strong><br>${escHtml(doc2).replace(/\n/g,'<br>')}</p>`;
+      } else {
+        const p = document.getElementById(`prompt-${i}`).value.trim();
+        if (p) prompt = `<p>${escHtml(p).replace(/\n/g,'<br>')}</p>`;
+      }
+
+      const response = document.getElementById(`response-${i}`).value.trim();
+      const words = countWords(response);
+      const timerText = document.getElementById(`timer-${i}`).textContent;
+      const responseHtml = response
+        ? escHtml(response).replace(/\n/g,'<br>')
+        : '<em style="color:#aaa">(aucune réponse)</em>';
+
+      tasksHtml += `
+        <div style="margin-bottom:32pt; page-break-inside:avoid;">
+          <h2 style="font-family:Arial;font-size:16pt;color:#1a1714;border-bottom:2pt solid #2563eb;padding-bottom:4pt;margin-bottom:8pt;">
+            ${taskNames[i]}
+          </h2>
+          <p style="font-family:Arial;font-size:11pt;color:#444;margin-bottom:10pt;">
+            <strong>Mots :</strong> <span style="color:#2563eb;font-weight:bold;">${words}</span>
+            &nbsp;&nbsp;&nbsp;
+            <strong>Temps :</strong> <span style="color:#16a34a;font-weight:bold;">${timerText}</span>
+          </p>
+          ${prompt ? `
+          <p style="font-family:Arial;font-size:11pt;color:#555;font-weight:bold;margin-bottom:4pt;">Consigne :</p>
+          <div style="font-family:Arial;font-size:10.5pt;color:#555;font-style:italic;margin-left:18pt;margin-bottom:10pt;">
+            ${prompt}
+          </div>` : ''}
+          <p style="font-family:Arial;font-size:11pt;color:#1a1714;font-weight:bold;margin-bottom:6pt;">Réponse :</p>
+          <div style="font-family:Arial;font-size:12pt;color:#1a1714;margin-left:18pt;line-height:1.6;">
+            ${responseHtml}
+          </div>
+        </div>`;
+    }
+
+    const html = `
+      <html xmlns:o="urn:schemas-microsoft-com:office:office"
+            xmlns:w="urn:schemas-microsoft-com:office:word"
+            xmlns="http://www.w3.org/TR/REC-html40">
+      <head>
+        <meta charset="UTF-8">
+        <!--[if gte mso 9]>
+        <xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml>
+        <![endif]-->
+        <style>
+          @page { margin: 2.5cm; }
+          body { font-family: Arial, sans-serif; font-size: 12pt; color: #1a1714; }
+        </style>
+      </head>
+      <body>
+        <h1 style="font-family:Arial;font-size:22pt;color:#2563eb;text-align:center;margin-bottom:4pt;">
+          TCF — Expression Écrite
+        </h1>
+        <p style="font-family:Arial;font-size:10pt;color:#888;text-align:center;font-style:italic;margin-bottom:28pt;">
+          Exporté le ${dateStr}
+        </p>
+        ${tasksHtml}
+      </body>
+      </html>`;
+
+    const blob = new Blob([html], { type: 'application/msword;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function clearAll() {
+    if (!confirm('Effacer toutes les réponses en cours et réinitialiser les chronomètres ? (L\'historique sauvegardé ne sera pas affecté)')) return;
+    for (let i = 0; i < 3; i++) {
+      clearInterval(timers[i]);
+      timers[i] = null;
+      seconds[i] = 0;
+      timerStarted[i] = false;
+      document.getElementById(`response-${i}`).value = '';
+      document.getElementById(`timer-${i}`).textContent = '00:00';
+      if (i === 2) {
+        document.getElementById('prompt-2-titre').value = '';
+        document.getElementById('prompt-2-doc1').value = '';
+        document.getElementById('prompt-2-doc2').value = '';
+        localStorage.removeItem('tcf_prompt_2_titre');
+        localStorage.removeItem('tcf_prompt_2_doc1');
+        localStorage.removeItem('tcf_prompt_2_doc2');
+      } else {
+        localStorage.removeItem(`tcf_prompt_${i}`);
+      }
+      localStorage.removeItem(`tcf_response_${i}`);
+      localStorage.removeItem(`tcf_timer_${i}`);
+      updateWordCount(i);
+    }
+  }
+
+  // ══════════════════════════════════════════
+  //  AI CORRECTION  — Anthropic Claude API
+  // ══════════════════════════════════════════
+  const AI_TASK_NAMES  = ['Message court (Tâche 1)', 'Narration (Tâche 2)', 'Argumentation (Tâche 3)'];
+  const AI_TASK_TYPES  = ['un message court ou courriel informel (60-120 mots)', 'un texte narratif ou descriptif (120-150 mots)', 'un texte argumentatif / synthèse (120-180 mots)'];
+  const CLB_LEVELS = {
+    1: { label:'CLB 4',  desc:'Débutant avancé',            pct: 22 },
+    2: { label:'CLB 5',  desc:'Intermédiaire inférieur',     pct: 33 },
+    3: { label:'CLB 6',  desc:'Intermédiaire',               pct: 44 },
+    4: { label:'CLB 7',  desc:'Intermédiaire supérieur',     pct: 55 },
+    5: { label:'CLB 8',  desc:'Avancé inférieur',            pct: 66 },
+    6: { label:'CLB 9',  desc:'Avancé',                      pct: 77 },
+    7: { label:'CLB 10', desc:'Avancé supérieur',            pct: 88 },
+    8: { label:'CLB 11-12', desc:'Compétence native/bilingue', pct:100 }
+  };
+  let aiTaskIdx = -1;
+
+  function aiOpen(i) {
+    const txt = document.getElementById(`response-${i}`).value.trim();
+    if (!txt || txt.length < 15) { alert('Écrivez d\'abord une réponse avant de demander une correction.'); return; }
+    aiTaskIdx = i;
+    document.getElementById('aiModalTitle').textContent = '✨ ' + AI_TASK_NAMES[i];
+    document.getElementById('aiErr').classList.remove('show');
+    document.getElementById('aiSpinner').classList.remove('show');
+    document.getElementById('aiRes').classList.remove('show');
+    const saved = localStorage.getItem('tcf_groq_key') || '';
+    document.getElementById('aiKeyInput').value = saved;
+    document.getElementById('aiOverlay').classList.add('open');
+    if (saved) aiRun();
+  }
+
+  function aiClose() { document.getElementById('aiOverlay').classList.remove('open'); aiTaskIdx = -1; }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') aiClose(); });
+
+  function aiSaveKey() {
+    const k = document.getElementById('aiKeyInput').value.trim();
+    if (!k) return;
+    localStorage.setItem('tcf_groq_key', k);
+    const b = document.getElementById('aiSaveKeyBtn');
+    b.textContent = '✓ Mémorisé'; setTimeout(() => { b.textContent = '💾 Mémoriser'; }, 1600);
+  }
+
+  async function aiRun() {
+    const apiKey = document.getElementById('aiKeyInput').value.trim();
+    if (!apiKey) { aiShowErr('Entrez votre clé API Groq (gsk_…) ci-dessus.'); return; }
+    localStorage.setItem('tcf_groq_key', apiKey);
+
+    const i = aiTaskIdx;
+    const responseText = document.getElementById(`response-${i}`).value.trim();
+    let consigne = '';
+    if (i === 2) {
+      const titre = document.getElementById('prompt-2-titre').value.trim();
+      const d1    = document.getElementById('prompt-2-doc1').value.trim();
+      const d2    = document.getElementById('prompt-2-doc2').value.trim();
+      if (titre) consigne += `Titre : ${titre}\n`;
+      if (d1)    consigne += `Document 1 : ${d1}\n`;
+      if (d2)    consigne += `Document 2 : ${d2}`;
+    } else {
+      consigne = document.getElementById(`prompt-${i}`).value.trim();
+    }
+
+    document.getElementById('aiErr').classList.remove('show');
+    document.getElementById('aiRes').classList.remove('show');
+    document.getElementById('aiSpinner').classList.add('show');
+    document.getElementById('aiRunBtn').disabled = true;
+
+    const prompt = `Tu es un correcteur expert du TCF Canada. Évalue ce texte qui est ${AI_TASK_TYPES[i]}.
+
+${consigne ? `CONSIGNE :\n${consigne}\n\n` : ''}TEXTE DU CANDIDAT (${countWords(responseText)} mots) :
+${responseText}
+
+Évalue selon les 4 critères TCF Canada :
+1. Respect de la consigne et pertinence du contenu
+2. Cohérence et cohésion
+3. Vocabulaire (étendue et précision)
+4. Grammaire et syntaxe
+
+IMPORTANT : Réponds UNIQUEMENT avec un objet JSON valide. Pas de texte avant, pas de texte après, pas de balises markdown, pas de backticks. Toutes les valeurs de type string doivent tenir sur une seule ligne (pas de retours à la ligne dans les valeurs). Format exact :
+{"score":4,"note":"12/20","resume":"...","points_forts":["...","..."],"axes":["...","..."],"erreurs":["...","...","..."],"texte_corrige":"..."}
+
+score : entier de 1 à 8 (1=CLB4, 2=CLB5, 3=CLB6, 4=CLB7, 5=CLB8, 6=CLB9, 7=CLB10, 8=CLB11-12)`;
+
+    try {
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + apiKey
+        },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          max_tokens: 1500,
+          temperature: 0.3,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        const msg = err?.error?.message || `Erreur HTTP ${res.status}`;
+        throw new Error(msg);
+      }
+
+      const data = await res.json();
+      const raw = data?.choices?.[0]?.message?.content || '';
+      // Extract JSON block
+      const match = raw.match(/\{[\s\S]*\}/);
+      if (!match) throw new Error('Réponse inattendue de l\'IA. Réessayez.');
+      let jsonStr = match[0];
+      // Fix common LLM JSON issues: trailing commas, smart quotes, newlines inside strings
+      jsonStr = jsonStr
+        .replace(/,\s*([\}\]])/g, '$1')          // trailing commas
+        .replace(/[\u201C\u201D]/g, '"')          // smart double quotes
+        .replace(/[\u2018\u2019]/g, "'")          // smart single quotes
+        .replace(/\n/g, '\\n')                    // literal newlines inside strings
+        .replace(/\\n(?=[^"]*"[^"]*(?:"[^"]*"[^"]*)*$)/g, ' '); // fix over-escaped
+      // More aggressive: re-extract after cleanup
+      let r;
+      try {
+        r = JSON.parse(jsonStr);
+      } catch(parseErr) {
+        // Last resort: build object manually from regex
+        const getStr  = (key) => { const m = raw.match(new RegExp(`"${key}"\\s*:\\s*"([^"]*?)"`));  return m ? m[1] : ''; };
+        const getNum  = (key) => { const m = raw.match(new RegExp(`"${key}"\\s*:\\s*(\\d+)`));       return m ? parseInt(m[1]) : 4; };
+        const getArr  = (key) => { const m = raw.match(new RegExp(`"${key}"\\s*:\\s*\\[([^\\]]*?)\\]`,'s')); if(!m) return []; return m[1].match(/"([^"]+?)"/g)?.map(s=>s.replace(/"/g,''))||[]; };
+        r = {
+          score:         getNum('score'),
+          note:          getStr('note'),
+          resume:        getStr('resume'),
+          points_forts:  getArr('points_forts'),
+          axes:          getArr('axes'),
+          erreurs:       getArr('erreurs'),
+          texte_corrige: getStr('texte_corrige')
+        };
+      }
+      aiRender(r);
+    } catch(e) {
+      document.getElementById('aiSpinner').classList.remove('show');
+      aiShowErr('Erreur : ' + e.message);
+    } finally {
+      document.getElementById('aiRunBtn').disabled = false;
+    }
+  }
+
+  function aiRender(r) {
+    document.getElementById('aiSpinner').classList.remove('show');
+    aiLastResult[aiTaskIdx] = r; // save result for archiving
+    const clb = CLB_LEVELS[r.score] || CLB_LEVELS[4];
+
+    document.getElementById('aiNote').textContent   = r.note || '—';
+    document.getElementById('aiClbLabel').textContent = clb.label;
+    document.getElementById('aiClbDesc').textContent  = clb.desc;
+    setTimeout(() => { document.getElementById('aiClbBar').style.width = clb.pct + '%'; }, 80);
+
+    let html = '';
+    if (r.resume) html += sec('📊 Résumé', 'ai-sec-blue',   `<p>${esc(r.resume)}</p>`);
+    if (r.points_forts?.length) html += sec('✅ Points forts',          'ai-sec-green',  list(r.points_forts));
+    if (r.axes?.length)         html += sec('💡 Axes d\'amélioration',  'ai-sec-yellow', list(r.axes));
+    if (r.erreurs?.length)      html += sec('🔴 Corrections concrètes', 'ai-sec-red',    list(r.erreurs));
+    if (r.texte_corrige)        html += sec('✏️ Version corrigée',      'ai-sec-purple', `<p style="white-space:pre-wrap">${esc(r.texte_corrige)}</p>`);
+
+    document.getElementById('aiSections').innerHTML = html;
+    document.getElementById('aiRes').classList.add('show');
+  }
+
+  function sec(title, cls, body) {
+    return `<div class="ai-section ${cls}"><div class="ai-section-title">${title}</div>${body}</div>`;
+  }
+  function list(arr) { return '<ul>' + arr.map(x => `<li>${esc(x)}</li>`).join('') + '</ul>'; }
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function aiShowErr(msg) { const e = document.getElementById('aiErr'); e.textContent = msg; e.classList.add('show'); }
+</script>
+
+<!-- ══ AI Correction Modal ══ -->
+<div class="ai-overlay" id="aiOverlay" onclick="if(event.target===this)aiClose()">
+  <div class="ai-modal">
+    <div class="ai-mhead">
+      <h3 id="aiModalTitle">✨ Correction IA</h3>
+      <button class="ai-mclose" onclick="aiClose()">✕</button>
+    </div>
+    <div class="ai-mbody">
+
+      <div class="ai-keyrow">
+        <input type="password" id="aiKeyInput" placeholder="Clé API Groq  gsk_…" />
+        <button id="aiSaveKeyBtn" class="btn-save-task" style="white-space:nowrap" onclick="aiSaveKey()">💾 Mémoriser</button>
+        <button id="aiRunBtn" class="btn-ai" onclick="aiRun()">▶ Lancer</button>
+      </div>
+      <p class="ai-key-hint">
+        Clé <strong>gratuite</strong> (sans carte bancaire) sur
+        <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a> → Create API Key.
+        Elle est sauvegardée localement dans votre navigateur.
+      </p>
+
+      <div class="ai-err" id="aiErr"></div>
+
+      <div class="ai-spin-wrap" id="aiSpinner">
+        <div class="ai-spinner"></div>
+        <div style="font-size:14px;color:var(--text-muted);font-weight:500">Correction en cours…</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px">L'IA analyse votre texte selon les critères TCF Canada</div>
+      </div>
+
+      <div class="ai-res" id="aiRes">
+        <div class="clb-badge">
+          <div class="clb-note" id="aiNote">—</div>
+          <div class="clb-info">
+            <div class="clb-lbl">Niveau estimé TCF Canada</div>
+            <div class="clb-title" id="aiClbLabel">—</div>
+            <div class="clb-sub"  id="aiClbDesc">—</div>
+            <div class="clb-prog"><div class="clb-prog-bar" id="aiClbBar" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div id="aiSections"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
