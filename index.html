@@ -693,9 +693,10 @@
   textarea.titre-area {
     min-height: unset !important;
     height: auto !important;
-    font-size: 15px !important;
+    font-size: 14.5px !important;
     font-weight: 600;
     resize: none;
+    overflow: hidden;
     rows: 1;
   }
 
@@ -1051,7 +1052,7 @@
                   <option value="Junho">Junho</option>
                 </select>
                 <select id="picker-combo-0" class="picker-select picker-combo" onchange="checkAlreadyDone(0, parseInt(this.value)); applySubject(0,'t1')"></select>
-                <button class="btn-pick" onclick="applySubject(0,'t1')">✓ Usar este assunto</button>
+
                 <div class="already-done-banner" id="already-done-0">⚠️ <span id="already-done-txt-0"></span></div>
               </div>
               <div id="dup-siblings-0" class="dup-siblings-row" style="display:none;flex-wrap:wrap;align-items:center;gap:4px;margin-top:6px;padding:6px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);"></div>
@@ -1108,7 +1109,7 @@
                   <option value="Junho">Junho</option>
                 </select>
                 <select id="picker-combo-1" class="picker-select picker-combo" onchange="checkAlreadyDone(1, parseInt(this.value)); applySubject(1,'t2')"></select>
-                <button class="btn-pick" onclick="applySubject(1,'t2')">✓ Usar este assunto</button>
+
                 <div class="already-done-banner" id="already-done-1">⚠️ <span id="already-done-txt-1"></span></div>
               </div>
               <div id="dup-siblings-1" class="dup-siblings-row" style="display:none;flex-wrap:wrap;align-items:center;gap:4px;margin-top:6px;padding:6px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);"></div>
@@ -1165,13 +1166,13 @@
                   <option value="Junho">Junho</option>
                 </select>
                 <select id="picker-combo-2" class="picker-select picker-combo" onchange="checkAlreadyDone(2, parseInt(this.value)); applySubject(2,'t3')"></select>
-                <button class="btn-pick" onclick="applySubject(2,'t3')">✓ Usar este assunto</button>
+
                 <div class="already-done-banner" id="already-done-2">⚠️ <span id="already-done-txt-2"></span></div>
               </div>
               <div id="dup-siblings-2" class="dup-siblings-row" style="display:none;flex-wrap:wrap;align-items:center;gap:4px;margin-top:6px;padding:6px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);"></div>
             </div>
             <div class="consigne-sub-label">Titre</div>
-            <textarea class="prompt-area titre-area" id="prompt-2-titre" placeholder="Titre do sujet…" oninput="savePrompt(2)" rows="1" style="min-height:unset;font-size:15px;font-weight:600"></textarea>
+            <textarea class="prompt-area titre-area" id="prompt-2-titre" placeholder="Titre do sujet…" oninput="savePrompt(2); this.style.height='auto'; this.style.height=this.scrollHeight+'px'" rows="1" style="min-height:unset;font-size:14.5px;font-weight:600"></textarea>
             <div class="consigne-sub-label" style="margin-top:12px">Document 1</div>
             <textarea class="prompt-area" id="prompt-2-doc1" placeholder="Contenu du document 1…" oninput="savePrompt(2)" rows="5" style="font-size:13px"></textarea>
             <div class="consigne-sub-label" style="margin-top:12px">Document 2</div>
@@ -1860,6 +1861,10 @@
       const { title: titre3, doc1: doc1val, doc2: doc2val } = splitT3(txt);
       const titre = titre3 || combo.label;
       document.getElementById('prompt-2-titre').value = titre;
+      // Auto-resize
+      const titreEl = document.getElementById('prompt-2-titre');
+      titreEl.style.height = 'auto';
+      titreEl.style.height = titreEl.scrollHeight + 'px';
       document.getElementById('prompt-2-doc1').value = doc1val;
       document.getElementById('prompt-2-doc2').value = doc2val;
     } else {
