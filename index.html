@@ -640,54 +640,100 @@
     margin-bottom: 6px;
   }
 
-  /* ── Two-column task layout ── */
+  /* ══ LAYOUT: HORIZONTAL (default) ══ */
   .task-body {
     display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .task-top {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 20px;
+  }
+
+  .task-top .subject-picker {
+    margin-bottom: 10px;
+  }
+
+  .task-bottom {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    padding: 16px 20px 0;
+  }
+
+  .task-bottom textarea.response-area {
+    flex: 1;
+    min-height: 260px;
+    resize: vertical;
+  }
+
+  .task-bottom .response-footer {
+    border-top: 1px solid var(--border);
+    margin: 0 -20px;
+    padding: 12px 20px 16px;
+  }
+
+  /* keep column refs harmless in horizontal mode */
+  .task-left, .task-right { display: contents; }
+
+  /* ══ LAYOUT: COLUNAS ══ */
+  [data-layout="colunas"] .task-body {
+    flex-direction: row;
     gap: 16px;
     align-items: flex-start;
     min-height: 0;
   }
 
-  .task-left {
+  [data-layout="colunas"] .task-top {
     flex: 0 0 32%;
-    padding: 20px 20px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 16px;
     overflow-y: auto;
   }
 
-  .task-right {
+  [data-layout="colunas"] .task-bottom {
     flex: 1;
-    margin-left: 0;
     padding: 20px 24px 0;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    display: flex;
-    flex-direction: column;
   }
 
-  .task-right .field-label {
-    margin-bottom: 10px;
-  }
-
-  .task-right textarea.response-area {
-    flex: 1;
+  [data-layout="colunas"] .task-bottom textarea.response-area {
     min-height: 300px;
     resize: none;
   }
 
-  .task-right .response-footer {
-    border-top: 1px solid var(--border);
+  [data-layout="colunas"] .task-bottom .response-footer {
     margin: 0 -24px;
     padding: 12px 24px 16px;
   }
+
+  /* Layout toggle button */
+  .btn-layout {
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+  }
+  .btn-layout:hover { color: var(--accent); border-color: var(--accent); background: var(--surface); }
 
   /* Titre field compact */
   textarea.titre-area {
@@ -978,6 +1024,7 @@
     <button class="btn-clear" onclick="loadRandomCombo()" style="color:var(--accent);border-color:var(--accent);font-weight:600" title="Carregar uma combinaison aleatória">🎲 Aleatório</button>
     <button class="btn-export" onclick="exportToWord()" title="Exportar para Word">📄 Exportar .docx</button>
     <button class="btn-clear" onclick="clearAll()">Effacer tout</button>
+    <button class="btn-layout" id="layoutToggle" onclick="toggleLayout()" title="Alternar layout">⬜ Horizontal</button>
     <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Changer le thème">🌙</button>
   </div>
 </header>
@@ -1039,28 +1086,25 @@
   <div class="task-panel active" id="panel-0">
     <div class="task-card">
       <div class="task-body">
-        <div class="task-left">
-          <div>
-            <div class="field-label"><span>📋</span> Consigne / Énoncé</div>
-            <div id="subject-picker-0" class="subject-picker">
-              <div class="picker-row">
-                <select id="picker-month-0" class="picker-select" onchange="buildSubjectPicker(0,'t1')">
-                  <option value="all">Todos os meses</option>
-                  <option value="Março">Março</option>
-                  <option value="Abril">Abril</option>
-                  <option value="Maio">Maio</option>
-                  <option value="Junho">Junho</option>
-                </select>
-                <select id="picker-combo-0" class="picker-select picker-combo" onchange="checkAlreadyDone(0, parseInt(this.value)); applySubject(0,'t1')"></select>
-
-                <div class="already-done-banner" id="already-done-0">⚠️ <span id="already-done-txt-0"></span></div>
-              </div>
-              <div id="dup-siblings-0" class="dup-siblings-row" style="display:none;flex-wrap:wrap;align-items:center;gap:4px;margin-top:6px;padding:6px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);"></div>
+        <div class="task-top">
+          <div class="field-label"><span>📋</span> Consigne / Énoncé</div>
+          <div id="subject-picker-0" class="subject-picker">
+            <div class="picker-row">
+              <select id="picker-month-0" class="picker-select" onchange="buildSubjectPicker(0,'t1')">
+                <option value="all">Todos os meses</option>
+                <option value="Março">Março</option>
+                <option value="Abril">Abril</option>
+                <option value="Maio">Maio</option>
+                <option value="Junho">Junho</option>
+              </select>
+              <select id="picker-combo-0" class="picker-select picker-combo" onchange="checkAlreadyDone(0, parseInt(this.value)); applySubject(0,'t1')"></select>
+              <div class="already-done-banner" id="already-done-0">⚠️ <span id="already-done-txt-0"></span></div>
             </div>
-            <textarea class="prompt-area" id="prompt-0" placeholder="O assunto aparecerá aqui após escolher acima — ou cole diretamente." oninput="savePrompt(0)" rows="6" style="min-height:120px"></textarea>
+            <div id="dup-siblings-0" class="dup-siblings-row" style="display:none;flex-wrap:wrap;align-items:center;gap:4px;margin-top:6px;padding:6px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);"></div>
           </div>
+          <textarea class="prompt-area" id="prompt-0" placeholder="O assunto aparecerá aqui após escolher acima — ou cole diretamente." oninput="savePrompt(0)" rows="4" style="min-height:80px;resize:vertical"></textarea>
         </div>
-        <div class="task-right">
+        <div class="task-bottom">
           <div class="field-label"><span>✍️</span> Votre réponse</div>
           <textarea class="response-area" id="response-0" placeholder="Commencez à écrire votre réponse ici… Le chronomètre démarre automatiquement." oninput="onResponseInput(0)"></textarea>
           <div class="response-footer">
@@ -1096,28 +1140,25 @@
   <div class="task-panel" id="panel-1">
     <div class="task-card">
       <div class="task-body">
-        <div class="task-left">
-          <div>
-            <div class="field-label"><span>📋</span> Consigne / Énoncé</div>
-            <div id="subject-picker-1" class="subject-picker">
-              <div class="picker-row">
-                <select id="picker-month-1" class="picker-select" onchange="buildSubjectPicker(1,'t2')">
-                  <option value="all">Todos os meses</option>
-                  <option value="Março">Março</option>
-                  <option value="Abril">Abril</option>
-                  <option value="Maio">Maio</option>
-                  <option value="Junho">Junho</option>
-                </select>
-                <select id="picker-combo-1" class="picker-select picker-combo" onchange="checkAlreadyDone(1, parseInt(this.value)); applySubject(1,'t2')"></select>
-
-                <div class="already-done-banner" id="already-done-1">⚠️ <span id="already-done-txt-1"></span></div>
-              </div>
-              <div id="dup-siblings-1" class="dup-siblings-row" style="display:none;flex-wrap:wrap;align-items:center;gap:4px;margin-top:6px;padding:6px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);"></div>
+        <div class="task-top">
+          <div class="field-label"><span>📋</span> Consigne / Énoncé</div>
+          <div id="subject-picker-1" class="subject-picker">
+            <div class="picker-row">
+              <select id="picker-month-1" class="picker-select" onchange="buildSubjectPicker(1,'t2')">
+                <option value="all">Todos os meses</option>
+                <option value="Março">Março</option>
+                <option value="Abril">Abril</option>
+                <option value="Maio">Maio</option>
+                <option value="Junho">Junho</option>
+              </select>
+              <select id="picker-combo-1" class="picker-select picker-combo" onchange="checkAlreadyDone(1, parseInt(this.value)); applySubject(1,'t2')"></select>
+              <div class="already-done-banner" id="already-done-1">⚠️ <span id="already-done-txt-1"></span></div>
             </div>
-            <textarea class="prompt-area" id="prompt-1" placeholder="O assunto aparecerá aqui após escolher acima — ou cole diretamente." oninput="savePrompt(1)" rows="6" style="min-height:120px"></textarea>
+            <div id="dup-siblings-1" class="dup-siblings-row" style="display:none;flex-wrap:wrap;align-items:center;gap:4px;margin-top:6px;padding:6px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);"></div>
           </div>
+          <textarea class="prompt-area" id="prompt-1" placeholder="O assunto aparecerá aqui após escolher acima — ou cole diretamente." oninput="savePrompt(1)" rows="4" style="min-height:80px;resize:vertical"></textarea>
         </div>
-        <div class="task-right">
+        <div class="task-bottom">
           <div class="field-label"><span>✍️</span> Votre réponse</div>
           <textarea class="response-area" id="response-1" placeholder="Commencez à écrire votre réponse ici… Le chronomètre démarre automatiquement." oninput="onResponseInput(1)"></textarea>
           <div class="response-footer">
@@ -1153,33 +1194,36 @@
   <div class="task-panel" id="panel-2">
     <div class="task-card">
       <div class="task-body">
-        <div class="task-left">
-          <div>
-            <div class="field-label"><span>📋</span> Consigne / Énoncé</div>
-            <div id="subject-picker-2" class="subject-picker">
-              <div class="picker-row">
-                <select id="picker-month-2" class="picker-select" onchange="buildSubjectPicker(2,'t3')">
-                  <option value="all">Todos os meses</option>
-                  <option value="Março">Março</option>
-                  <option value="Abril">Abril</option>
-                  <option value="Maio">Maio</option>
-                  <option value="Junho">Junho</option>
-                </select>
-                <select id="picker-combo-2" class="picker-select picker-combo" onchange="checkAlreadyDone(2, parseInt(this.value)); applySubject(2,'t3')"></select>
-
-                <div class="already-done-banner" id="already-done-2">⚠️ <span id="already-done-txt-2"></span></div>
-              </div>
-              <div id="dup-siblings-2" class="dup-siblings-row" style="display:none;flex-wrap:wrap;align-items:center;gap:4px;margin-top:6px;padding:6px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);"></div>
+        <div class="task-top">
+          <div class="field-label"><span>📋</span> Consigne / Énoncé</div>
+          <div id="subject-picker-2" class="subject-picker">
+            <div class="picker-row">
+              <select id="picker-month-2" class="picker-select" onchange="buildSubjectPicker(2,'t3')">
+                <option value="all">Todos os meses</option>
+                <option value="Março">Março</option>
+                <option value="Abril">Abril</option>
+                <option value="Maio">Maio</option>
+                <option value="Junho">Junho</option>
+              </select>
+              <select id="picker-combo-2" class="picker-select picker-combo" onchange="checkAlreadyDone(2, parseInt(this.value)); applySubject(2,'t3')"></select>
+              <div class="already-done-banner" id="already-done-2">⚠️ <span id="already-done-txt-2"></span></div>
             </div>
-            <div class="consigne-sub-label">Titre</div>
-            <textarea class="prompt-area titre-area" id="prompt-2-titre" placeholder="Titre do sujet…" oninput="savePrompt(2); this.style.height='auto'; this.style.height=this.scrollHeight+'px'" rows="1" style="min-height:unset;font-size:14.5px;font-weight:600"></textarea>
-            <div class="consigne-sub-label" style="margin-top:12px">Document 1</div>
-            <textarea class="prompt-area" id="prompt-2-doc1" placeholder="Contenu du document 1…" oninput="savePrompt(2)" rows="5" style="font-size:13px"></textarea>
-            <div class="consigne-sub-label" style="margin-top:12px">Document 2</div>
-            <textarea class="prompt-area" id="prompt-2-doc2" placeholder="Contenu du document 2 (optionnel)…" oninput="savePrompt(2)" rows="3" style="font-size:13px"></textarea>
+            <div id="dup-siblings-2" class="dup-siblings-row" style="display:none;flex-wrap:wrap;align-items:center;gap:4px;margin-top:6px;padding:6px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);"></div>
+          </div>
+          <div class="consigne-sub-label">Titre</div>
+          <textarea class="prompt-area titre-area" id="prompt-2-titre" placeholder="Titre do sujet…" oninput="savePrompt(2); this.style.height='auto'; this.style.height=this.scrollHeight+'px'" rows="1" style="min-height:unset;font-size:14.5px;font-weight:600"></textarea>
+          <div style="display:flex;gap:16px;margin-top:12px;">
+            <div style="flex:1">
+              <div class="consigne-sub-label">Document 1</div>
+              <textarea class="prompt-area" id="prompt-2-doc1" placeholder="Contenu du document 1…" oninput="savePrompt(2)" rows="5" style="font-size:13px;resize:vertical"></textarea>
+            </div>
+            <div style="flex:1">
+              <div class="consigne-sub-label">Document 2</div>
+              <textarea class="prompt-area" id="prompt-2-doc2" placeholder="Contenu du document 2 (optionnel)…" oninput="savePrompt(2)" rows="5" style="font-size:13px;resize:vertical"></textarea>
+            </div>
           </div>
         </div>
-        <div class="task-right">
+        <div class="task-bottom">
           <div class="field-label"><span>✍️</span> Votre réponse</div>
           <textarea class="response-area" id="response-2" placeholder="Commencez à écrire votre réponse ici… Le chronomètre démarre automatiquement." oninput="onResponseInput(2)"></textarea>
           <div class="response-footer">
@@ -1268,6 +1312,8 @@
     loadHistory();
     const theme = localStorage.getItem('tcf_theme') || 'light';
     setTheme(theme);
+    const layout = localStorage.getItem('tcf_layout') || 'horizontal';
+    setLayout(layout);
   };
 
   // ── Tabs ──
@@ -1287,6 +1333,25 @@
     document.body.setAttribute('data-theme', theme);
     document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️' : '🌙';
     localStorage.setItem('tcf_theme', theme);
+  }
+
+  // ── Layout ──
+  function toggleLayout() {
+    const current = document.body.getAttribute('data-layout') || 'horizontal';
+    setLayout(current === 'horizontal' ? 'colunas' : 'horizontal');
+  }
+
+  function setLayout(layout) {
+    document.body.setAttribute('data-layout', layout);
+    const btn = document.getElementById('layoutToggle');
+    if (layout === 'colunas') {
+      btn.textContent = '▣ Colunas';
+      btn.title = 'Mudar para layout horizontal';
+    } else {
+      btn.textContent = '⬜ Horizontal';
+      btn.title = 'Mudar para layout em colunas';
+    }
+    localStorage.setItem('tcf_layout', layout);
   }
 
   // ── Timer ──
