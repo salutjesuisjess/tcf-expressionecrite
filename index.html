@@ -1021,6 +1021,7 @@
   </div>
   <div class="header-actions">
     <span class="save-indicator" id="saveIndicator">💾 Sauvegardé</span>
+    <a href="tcf_prognostico_v4_EE.html" class="btn-export" style="text-decoration:none" title="Ver prognóstico de sujets para junho">📊 Prognóstico Junho</a>
     <button class="btn-clear" onclick="loadRandomCombo()" style="color:var(--accent);border-color:var(--accent);font-weight:600" title="Carregar uma combinaison aleatória">🎲 Aleatório</button>
     <button class="btn-export" onclick="exportToWord()" title="Exportar para Word">📄 Exportar .docx</button>
     <button class="btn-clear" onclick="clearAll()">Effacer tout</button>
@@ -1101,6 +1102,7 @@
               <div class="already-done-banner" id="already-done-0">⚠️ <span id="already-done-txt-0"></span></div>
             </div>
             <div id="dup-siblings-0" class="dup-siblings-row" style="display:none;flex-wrap:wrap;align-items:center;gap:4px;margin-top:6px;padding:6px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);"></div>
+            <div id="theme-badge-0" style="display:none;margin-top:6px;"></div>
           </div>
           <textarea class="prompt-area" id="prompt-0" placeholder="O assunto aparecerá aqui após escolher acima — ou cole diretamente." oninput="savePrompt(0)" rows="4" style="min-height:80px;resize:vertical"></textarea>
         </div>
@@ -1155,6 +1157,7 @@
               <div class="already-done-banner" id="already-done-1">⚠️ <span id="already-done-txt-1"></span></div>
             </div>
             <div id="dup-siblings-1" class="dup-siblings-row" style="display:none;flex-wrap:wrap;align-items:center;gap:4px;margin-top:6px;padding:6px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);"></div>
+            <div id="theme-badge-1" style="display:none;margin-top:6px;"></div>
           </div>
           <textarea class="prompt-area" id="prompt-1" placeholder="O assunto aparecerá aqui após escolher acima — ou cole diretamente." oninput="savePrompt(1)" rows="4" style="min-height:80px;resize:vertical"></textarea>
         </div>
@@ -1209,6 +1212,7 @@
               <div class="already-done-banner" id="already-done-2">⚠️ <span id="already-done-txt-2"></span></div>
             </div>
             <div id="dup-siblings-2" class="dup-siblings-row" style="display:none;flex-wrap:wrap;align-items:center;gap:4px;margin-top:6px;padding:6px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);"></div>
+            <div id="theme-badge-2" style="display:none;margin-top:6px;"></div>
           </div>
           <div class="consigne-sub-label">Titre</div>
           <textarea class="prompt-area titre-area" id="prompt-2-titre" placeholder="Titre do sujet…" oninput="savePrompt(2); this.style.height='auto'; this.style.height=this.scrollHeight+'px'" rows="1" style="min-height:unset;font-size:14.5px;font-weight:600"></textarea>
@@ -1775,6 +1779,10 @@
   const DUP_GROUPS = [[0,77,79,98],[1,76,80,97],[2,41],[3,81],[5,73,87,111],[6,74,110],[8,58],[9,56],[10,23,50],[12,30,47,117],[14,40],[17,107],[18,108],[19,59],[20,60],[21,61],[22,62],[24,51],[25,52],[27,114],[28,34],[29,35],[33,119],[46,120],[69,91],[71,115],[72,86,112],[78,99]];
 
 
+  // ── Theme/probability index (auto-generated from prognóstico) ─────────────
+  // n=nome do tema, p=% relativo (vs tema mais frequente), c=quantas vezes apareceu, f=já caiu em junho
+  const THEME_INDEX = {"0":{"t2":{"n":"Apprentissage d'une langue étrangère — récit","p":83,"c":5,"f":true},"t3":{"n":"Cuisinier amateur ou professionnel","p":71,"c":5,"f":true}},"1":{"t1":{"n":"Renseignements sur les moyens de transport (ami qui emménage)","p":100,"c":6,"f":true},"t3":{"n":"Colocation (vivre en colocation / vie en colocation)","p":100,"c":7,"f":true}},"2":{"t2":{"n":"\"Tout quitter\" pour voyager ou changer de vie (forum)","p":67,"c":4,"f":false},"t3":{"n":"Le travail : favorable ou défavorable ?","p":29,"c":2,"f":false}},"3":{"t1":{"n":"Décrire un hôtel trouvé pour un(e) ami(e)","p":50,"c":3,"f":false},"t2":{"n":"Spectacle (film / théâtre / concert) — récit","p":33,"c":2,"f":false},"t3":{"n":"Relations amicales / Bien-être au travail / Sieste","p":86,"c":6,"f":false}},"7":{"t2":{"n":"Formation / cours — récit d'expérience","p":33,"c":2,"f":false}},"8":{"t3":{"n":"La lecture pour les enfants","p":86,"c":6,"f":true}},"9":{"t1":{"n":"Recommander des cours de langue","p":50,"c":3,"f":false},"t3":{"n":"Animaux de compagnie pour les enfants","p":43,"c":3,"f":false}},"10":{"t1":{"n":"Informations sur les nouveaux locaux de l'entreprise","p":50,"c":3,"f":false},"t2":{"n":"Semaine sans voiture — récit","p":50,"c":3,"f":false}},"12":{"t3":{"n":"Les objets connectés","p":29,"c":2,"f":false}},"13":{"t2":{"n":"Témoignage sur la colocation","p":67,"c":4,"f":true},"t3":{"n":"Le grossissement des villes","p":57,"c":4,"f":true}},"14":{"t3":{"n":"Le travail des jeunes pendant les vacances","p":29,"c":2,"f":false}},"15":{"t2":{"n":"Souvenir de voyage préféré — article de blog","p":50,"c":3,"f":true},"t3":{"n":"Vivre chez ses parents : pour ou contre","p":43,"c":3,"f":true}},"16":{"t3":{"n":"La lecture pour les enfants","p":86,"c":6,"f":true}},"17":{"t2":{"n":"Témoignage sur la colocation","p":67,"c":4,"f":true},"t3":{"n":"Le grossissement des villes","p":57,"c":4,"f":true}},"18":{"t2":{"n":"Étude à l'étranger — récit / avis (Facebook ou forum)","p":100,"c":6,"f":false},"t3":{"n":"Les nouvelles technologies pour les enfants","p":29,"c":2,"f":false}},"19":{"t2":{"n":"Habitudes alimentaires — récit","p":67,"c":4,"f":true},"t3":{"n":"Relations amicales / Bien-être au travail / Sieste","p":86,"c":6,"f":false}},"20":{"t2":{"n":"Festival de musique gratuit / événement récent — récit","p":50,"c":3,"f":true},"t3":{"n":"L'emploi des jeunes : diplôme ou expérience ?","p":29,"c":2,"f":false}},"21":{"t3":{"n":"La vie à la campagne ou en ville","p":43,"c":3,"f":false}},"22":{"t1":{"n":"Annonce de colocataire (chercher ou proposer)","p":67,"c":4,"f":false},"t2":{"n":"Troupe de théâtre — récit","p":33,"c":2,"f":false}},"23":{"t1":{"n":"Informations sur les nouveaux locaux de l'entreprise","p":50,"c":3,"f":false},"t2":{"n":"Semaine sans voiture — récit","p":50,"c":3,"f":false}},"24":{"t2":{"n":"Étude à l'étranger — récit / avis (Facebook ou forum)","p":100,"c":6,"f":false},"t3":{"n":"L'uniforme à l'école","p":43,"c":3,"f":false}},"25":{"t2":{"n":"Quitter la ville pour la campagne (forum)","p":33,"c":2,"f":false}},"26":{"t2":{"n":"Présenter sa profession aux élèves","p":33,"c":2,"f":false}},"28":{"t3":{"n":"Faut-il faire ses courses : petits magasins ou supermarchés ?","p":29,"c":2,"f":false}},"29":{"t1":{"n":"Annonce pour vendre un vélo","p":50,"c":3,"f":false},"t2":{"n":"Journée à la campagne — récit","p":33,"c":2,"f":false},"t3":{"n":"La sévérité des parents envers les enfants","p":29,"c":2,"f":false}},"34":{"t3":{"n":"Faut-il faire ses courses : petits magasins ou supermarchés ?","p":29,"c":2,"f":false}},"35":{"t1":{"n":"Annonce pour vendre un vélo","p":50,"c":3,"f":false},"t2":{"n":"Journée à la campagne — récit","p":33,"c":2,"f":false},"t3":{"n":"La sévérité des parents envers les enfants","p":29,"c":2,"f":false}},"36":{"t3":{"n":"Jeux vidéo (pour ou contre / impact comportement)","p":71,"c":5,"f":true}},"37":{"t2":{"n":"Fête en famille / fête traditionnelle — récit","p":50,"c":3,"f":true},"t3":{"n":"Limitation / interdiction des voitures en centre-ville","p":29,"c":2,"f":false}},"38":{"t1":{"n":"Annonce pour vendre un vélo","p":50,"c":3,"f":false}},"39":{"t3":{"n":"La vie à la campagne ou en ville","p":43,"c":3,"f":false}},"40":{"t3":{"n":"Le travail des jeunes pendant les vacances","p":29,"c":2,"f":false}},"41":{"t2":{"n":"\"Tout quitter\" pour voyager ou changer de vie (forum)","p":67,"c":4,"f":false},"t3":{"n":"Le travail : favorable ou défavorable ?","p":29,"c":2,"f":false}},"42":{"t3":{"n":"Égalité homme-femme (en milieu de travail)","p":29,"c":2,"f":false}},"43":{"t3":{"n":"Jeux vidéo (pour ou contre / impact comportement)","p":71,"c":5,"f":true}},"44":{"t2":{"n":"\"Tout quitter\" pour voyager ou changer de vie (forum)","p":67,"c":4,"f":false},"t3":{"n":"Relations amicales / Bien-être au travail / Sieste","p":86,"c":6,"f":false}},"45":{"t3":{"n":"Égalité homme-femme (en milieu de travail)","p":29,"c":2,"f":false}},"50":{"t1":{"n":"Informations sur les nouveaux locaux de l'entreprise","p":50,"c":3,"f":false},"t2":{"n":"Semaine sans voiture — récit","p":50,"c":3,"f":false}},"51":{"t2":{"n":"Étude à l'étranger — récit / avis (Facebook ou forum)","p":100,"c":6,"f":false},"t3":{"n":"L'uniforme à l'école","p":43,"c":3,"f":false}},"52":{"t2":{"n":"Quitter la ville pour la campagne (forum)","p":33,"c":2,"f":false}},"53":{"t2":{"n":"Présenter sa profession aux élèves","p":33,"c":2,"f":false}},"55":{"t3":{"n":"Colocation (vivre en colocation / vie en colocation)","p":100,"c":7,"f":true}},"56":{"t1":{"n":"Recommander des cours de langue","p":50,"c":3,"f":false},"t3":{"n":"Animaux de compagnie pour les enfants","p":43,"c":3,"f":false}},"57":{"t3":{"n":"Limitation / interdiction des voitures en centre-ville","p":29,"c":2,"f":false}},"58":{"t3":{"n":"La lecture pour les enfants","p":86,"c":6,"f":true}},"59":{"t2":{"n":"Habitudes alimentaires — récit","p":67,"c":4,"f":true},"t3":{"n":"Relations amicales / Bien-être au travail / Sieste","p":86,"c":6,"f":false}},"60":{"t2":{"n":"Festival de musique gratuit / événement récent — récit","p":50,"c":3,"f":true},"t3":{"n":"L'emploi des jeunes : diplôme ou expérience ?","p":29,"c":2,"f":false}},"61":{"t3":{"n":"La vie à la campagne ou en ville","p":43,"c":3,"f":false}},"62":{"t1":{"n":"Annonce de colocataire (chercher ou proposer)","p":67,"c":4,"f":false},"t2":{"n":"Troupe de théâtre — récit","p":33,"c":2,"f":false}},"63":{"t2":{"n":"Fête en famille / fête traditionnelle — récit","p":50,"c":3,"f":true},"t3":{"n":"Restauration rapide","p":43,"c":3,"f":false}},"64":{"t2":{"n":"Habitudes alimentaires — récit","p":67,"c":4,"f":true},"t3":{"n":"Jeux vidéo (pour ou contre / impact comportement)","p":71,"c":5,"f":true}},"67":{"t3":{"n":"Restauration rapide","p":43,"c":3,"f":false}},"68":{"t3":{"n":"La lecture pour les enfants","p":86,"c":6,"f":true}},"69":{"t1":{"n":"Annonce de colocataire (chercher ou proposer)","p":67,"c":4,"f":false},"t2":{"n":"Nouvelle activité de loisir — récit","p":33,"c":2,"f":false},"t3":{"n":"La gratuité des musées","p":29,"c":2,"f":false}},"75":{"t3":{"n":"L'aide aux personnes pauvres","p":29,"c":2,"f":false}},"76":{"t1":{"n":"Renseignements sur les moyens de transport (ami qui emménage)","p":100,"c":6,"f":true},"t2":{"n":"Admiration pour une personnalité célèbre — article","p":67,"c":4,"f":true},"t3":{"n":"Colocation (vivre en colocation / vie en colocation)","p":100,"c":7,"f":true}},"77":{"t2":{"n":"Apprentissage d'une langue étrangère — récit","p":83,"c":5,"f":true},"t3":{"n":"Cuisinier amateur ou professionnel","p":71,"c":5,"f":true}},"78":{"t1":{"n":"Renseignements sur les moyens de transport (ami qui emménage)","p":100,"c":6,"f":true},"t2":{"n":"Fête de voisins — récit","p":33,"c":2,"f":false},"t3":{"n":"Distributeurs automatiques dans les écoles","p":29,"c":2,"f":false}},"79":{"t2":{"n":"Apprentissage d'une langue étrangère — récit","p":83,"c":5,"f":true},"t3":{"n":"Cuisinier amateur ou professionnel","p":71,"c":5,"f":true}},"80":{"t2":{"n":"Admiration pour une personnalité célèbre — article","p":67,"c":4,"f":true},"t3":{"n":"Colocation (vivre en colocation / vie en colocation)","p":100,"c":7,"f":true}},"81":{"t1":{"n":"Décrire un hôtel trouvé pour un(e) ami(e)","p":50,"c":3,"f":false},"t2":{"n":"Spectacle (film / théâtre / concert) — récit","p":33,"c":2,"f":false},"t3":{"n":"Relations amicales / Bien-être au travail / Sieste","p":86,"c":6,"f":false}},"83":{"t3":{"n":"Végétarisme / consommation de viande","p":29,"c":2,"f":false}},"84":{"t1":{"n":"Recommander des cours de langue","p":50,"c":3,"f":false},"t3":{"n":"Végétarisme / consommation de viande","p":29,"c":2,"f":false}},"85":{"t3":{"n":"Colocation (vivre en colocation / vie en colocation)","p":100,"c":7,"f":true}},"88":{"t2":{"n":"Formation / cours — récit d'expérience","p":33,"c":2,"f":false}},"90":{"t3":{"n":"Les objets connectés","p":29,"c":2,"f":false}},"91":{"t1":{"n":"Annonce de colocataire (chercher ou proposer)","p":67,"c":4,"f":false},"t2":{"n":"Nouvelle activité de loisir — récit","p":33,"c":2,"f":false},"t3":{"n":"La gratuité des musées","p":29,"c":2,"f":false}},"92":{"t3":{"n":"Restauration rapide","p":43,"c":3,"f":false}},"93":{"t2":{"n":"Étude à l'étranger — récit / avis (Facebook ou forum)","p":100,"c":6,"f":false},"t3":{"n":"L'uniforme à l'école","p":43,"c":3,"f":false}},"94":{"t1":{"n":"Décrire un hôtel trouvé pour un(e) ami(e)","p":50,"c":3,"f":false},"t3":{"n":"Jeux vidéo (pour ou contre / impact comportement)","p":71,"c":5,"f":true}},"95":{"t2":{"n":"\"Tout quitter\" pour voyager ou changer de vie (forum)","p":67,"c":4,"f":false},"t3":{"n":"Relations amicales / Bien-être au travail / Sieste","p":86,"c":6,"f":false}},"96":{"t2":{"n":"Étude à l'étranger — récit / avis (Facebook ou forum)","p":100,"c":6,"f":false},"t3":{"n":"L'aide aux personnes pauvres","p":29,"c":2,"f":false}},"97":{"t1":{"n":"Renseignements sur les moyens de transport (ami qui emménage)","p":100,"c":6,"f":true},"t2":{"n":"Admiration pour une personnalité célèbre — article","p":67,"c":4,"f":true},"t3":{"n":"Colocation (vivre en colocation / vie en colocation)","p":100,"c":7,"f":true}},"98":{"t2":{"n":"Apprentissage d'une langue étrangère — récit","p":83,"c":5,"f":true},"t3":{"n":"Cuisinier amateur ou professionnel","p":71,"c":5,"f":true}},"99":{"t1":{"n":"Renseignements sur les moyens de transport (ami qui emménage)","p":100,"c":6,"f":true},"t2":{"n":"Fête de voisins — récit","p":33,"c":2,"f":false},"t3":{"n":"Distributeurs automatiques dans les écoles","p":29,"c":2,"f":false}},"101":{"t3":{"n":"Animaux de compagnie pour les enfants","p":43,"c":3,"f":false}},"105":{"t2":{"n":"Souvenir de voyage préféré — article de blog","p":50,"c":3,"f":true},"t3":{"n":"Vivre chez ses parents : pour ou contre","p":43,"c":3,"f":true}},"106":{"t3":{"n":"La lecture pour les enfants","p":86,"c":6,"f":true}},"107":{"t2":{"n":"Témoignage sur la colocation","p":67,"c":4,"f":true},"t3":{"n":"Le grossissement des villes","p":57,"c":4,"f":true}},"108":{"t2":{"n":"Étude à l'étranger — récit / avis (Facebook ou forum)","p":100,"c":6,"f":false},"t3":{"n":"Les nouvelles technologies pour les enfants","p":29,"c":2,"f":false}},"121":{"t2":{"n":"Habitudes alimentaires — récit","p":67,"c":4,"f":true},"t3":{"n":"Jeux vidéo (pour ou contre / impact comportement)","p":71,"c":5,"f":true}},"122":{"t2":{"n":"Fête en famille / fête traditionnelle — récit","p":50,"c":3,"f":true},"t3":{"n":"Les parcs zoologiques : pour ou contre","p":14,"c":1,"f":true}},"123":{"t3":{"n":"La lecture pour les enfants","p":86,"c":6,"f":true}},"124":{"t1":{"n":"Renseignements sur les moyens de transport (ami qui emménage)","p":100,"c":6,"f":true},"t2":{"n":"Admiration pour une personnalité célèbre — article","p":67,"c":4,"f":true},"t3":{"n":"Colocation (vivre en colocation / vie en colocation)","p":100,"c":7,"f":true}},"125":{"t2":{"n":"Apprentissage d'une langue étrangère — récit","p":83,"c":5,"f":true},"t3":{"n":"Cuisinier amateur ou professionnel","p":71,"c":5,"f":true}},"126":{"t2":{"n":"Témoignage sur la colocation","p":67,"c":4,"f":true},"t3":{"n":"Le grossissement des villes","p":57,"c":4,"f":true}},"127":{"t2":{"n":"Souvenir de voyage préféré — article de blog","p":50,"c":3,"f":true},"t3":{"n":"Vivre chez ses parents : pour ou contre","p":43,"c":3,"f":true}},"128":{"t2":{"n":"Festival de musique gratuit / événement récent — récit","p":50,"c":3,"f":true},"t3":{"n":"Le vélo en ville : pour ou contre","p":14,"c":1,"f":true}}};
+
   // ── Duplicates panel ──────────────────────────────────────────────────────
   function getDoneCombos() {
     // Returns a Set of combo labels that appear in the archive history
@@ -1888,6 +1896,7 @@
     sel.innerHTML = '<option value="">— Escolher combinaison —</option>' +
       deduped.map(({ combo, idx }) => `<option value="${idx}">${combo.label}</option>`).join('');
     showDupSiblings(taskPanel, -1);
+    showThemeBadge(taskPanel, -1, taskKey);
   }
 
   function showDupSiblings(taskPanel, comboIdx) {
@@ -1914,6 +1923,24 @@
     container.innerHTML = `<span style="font-size:12px;color:var(--text-muted);margin-right:6px;align-self:center;">🔁 Idêntico a:</span>${siblingBadges}`;
   }
 
+  // ── Theme/probability badge (based on prognóstico ranking) ─────────────────
+  function showThemeBadge(taskPanel, comboIdx, taskKey) {
+    const el = document.getElementById('theme-badge-' + taskPanel);
+    if (!el) return;
+    const info = (comboIdx >= 0 && THEME_INDEX[comboIdx]) ? THEME_INDEX[comboIdx][taskKey] : null;
+    if (!info) {
+      el.style.display = 'none';
+      el.innerHTML = '';
+      return;
+    }
+    el.style.display = 'block';
+    if (info.f) {
+      el.innerHTML = `<span style="font-size:12px;font-weight:600;background:rgba(217,119,6,.12);border:1px solid rgba(217,119,6,.35);color:#d97706;border-radius:6px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px;">🔥 Tema: ${escHtml(info.n)} · já caiu em junho</span>`;
+    } else {
+      el.innerHTML = `<span style="font-size:12px;font-weight:600;background:rgba(37,99,235,.10);border:1px solid rgba(37,99,235,.3);color:var(--accent);border-radius:6px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px;">📊 Tema: ${escHtml(info.n)} · ${info.p}% chance estatística</span>`;
+    }
+  }
+
   function applySubject(taskPanel, taskKey) {
     const sel = document.getElementById('picker-combo-' + taskPanel);
     const idx = parseInt(sel.value);
@@ -1937,6 +1964,7 @@
     }
     scheduleSave();
     checkAlreadyDone(taskPanel, idx);
+    showThemeBadge(taskPanel, idx, taskKey);
     // Visually indicate loaded
     const ta = taskPanel === 2 ? document.getElementById('prompt-2-doc1') : document.getElementById('prompt-' + taskPanel);
     ta.style.transition = 'background 0.4s';
@@ -2066,9 +2094,34 @@
     return [body.slice(0, best).trim(), body.slice(best).trim()].filter(s => s.length > 0);
   }
   function splitT3(txt) {
+    // If the text contains a newline early on, use it as the natural title/body separator.
+    // Many combos are formatted as "Titre\nDocument 1\nDocument 2".
+    const newlineIdx = txt.indexOf('\n');
+    if (newlineIdx > 0 && newlineIdx < 120) {
+      const titleByNewline = txt.slice(0, newlineIdx).trim();
+      const bodyByNewline  = txt.slice(newlineIdx + 1).trim();
+      if (titleByNewline.length >= 3 && bodyByNewline.length > 0) {
+        const paragraphs = _t3FindParagraphs(bodyByNewline);
+        let doc1 = '', doc2 = '';
+        if (paragraphs.length >= 2) {
+          doc1 = paragraphs[0];
+          doc2 = paragraphs.slice(1).join(' ').trim();
+        } else if (paragraphs.length === 1) {
+          doc1 = paragraphs[0];
+        }
+        return { title: titleByNewline, doc1, doc2 };
+      }
+    }
+
     const title = _t3ExtractTitle(txt);
     // Remove title from start of text to get body
-    let body = txt.slice(title.length).replace(/^[\s.?!]+/, '').trim();
+    const titlePos = txt.indexOf(title);
+    let body = '';
+    if (titlePos !== -1) {
+      body = txt.slice(titlePos + title.length).replace(/^[\s.?!:]+/, '').trim();
+    } else {
+      body = txt.slice(title.length).replace(/^[\s.?!:]+/, '').trim();
+    }
 
     const paragraphs = _t3FindParagraphs(body);
 
