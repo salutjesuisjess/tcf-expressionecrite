@@ -1935,7 +1935,7 @@
     }
     el.style.display = 'block';
     if (info.f) {
-      el.innerHTML = `<span style="font-size:12px;font-weight:600;background:rgba(217,119,6,.12);border:1px solid rgba(217,119,6,.35);color:#d97706;border-radius:6px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px;">🔥 Tema: ${escHtml(info.n)} · já caiu em junho</span>`;
+      el.innerHTML = `<span style="font-size:12px;font-weight:600;background:rgba(217,119,6,.12);border:1px solid rgba(217,119,6,.35);color:#d97706;border-radius:6px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px;">🔥 Tema: ${escHtml(info.n)} · ${info.p}% chance · já caiu em junho</span>`;
     } else {
       el.innerHTML = `<span style="font-size:12px;font-weight:600;background:rgba(37,99,235,.10);border:1px solid rgba(37,99,235,.3);color:var(--accent);border-radius:6px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px;">📊 Tema: ${escHtml(info.n)} · ${info.p}% chance estatística</span>`;
     }
@@ -2143,18 +2143,82 @@
     return { title: finalTitle, doc1, doc2 };
   }
 
+  // ── Prognosis weights: theme keywords → weight (frequency from prognosis ranking) ──
+  const PROGNOSIS_WEIGHTS = [
+    { keywords: ['colocation','colocataire'], weight: 7 },
+    { keywords: ['lecture.*enfants','enfants.*lecture'], weight: 6 },
+    { keywords: ['relations amicales','bien-être au travail','sieste au travail'], weight: 6 },
+    { keywords: ['jeux vidéo'], weight: 5 },
+    { keywords: ['cuisinier amateur','cuisinier professionnel'], weight: 5 },
+    { keywords: ['grossissement des villes'], weight: 4 },
+    { keywords: ['uniforme.*école','école.*uniforme'], weight: 3 },
+    { keywords: ['animaux de compagnie'], weight: 3 },
+    { keywords: ['restauration rapide'], weight: 3 },
+    { keywords: ['vie à la campagne','vie en ville'], weight: 3 },
+    { keywords: ['vivre chez ses parents'], weight: 3 },
+    { keywords: ["étude.*l'étranger","université.*étranger","étranger.*étudi"], weight: 6 },
+    { keywords: ['apprentissage.*langue','langue étrangère'], weight: 5 },
+    { keywords: ['tout quitter','changer de vie'], weight: 4 },
+    { keywords: ['semaine sans voiture'], weight: 3 },
+    { keywords: ['habitudes alimentaires'], weight: 4 },
+    { keywords: ['personnalité.*célèbre','admiration'], weight: 4 },
+    { keywords: ['fête.*famille','fête traditionnelle'], weight: 3 },
+    { keywords: ['festival de musique'], weight: 3 },
+    { keywords: ['souvenir de voyage'], weight: 3 },
+  ];
+
+  function getPrognosisWeight(combo) {
+    const text = ((combo.t3 || '') + ' ' + (combo.t2 || '') + ' ' + (combo.t1 || '')).toLowerCase();
+    let maxW = 1;
+    for (const pw of PROGNOSIS_WEIGHTS) {
+      for (const kw of pw.keywords) {
+        try {
+          if (new RegExp(kw, 'i').test(text) && pw.weight > maxW) maxW = pw.weight;
+        } catch(e) {}
+      }
+    }
+    return maxW;
+  }
+
   function loadRandomCombo() {
-    // Only pick from unique combos (one per dup group)
+    const done = getDoneCombos();
+
+    // Build unique candidates (one per dup group), skip already-done combos
     const seenGroups = new Set();
-    const uniqueIndices = [];
+    const candidates = [];
     COMBOS.forEach((c, idx) => {
       const groupKey = DUP_MAP[idx] ? DUP_MAP[idx].join(',') : String(idx);
-      if (!seenGroups.has(groupKey)) {
-        seenGroups.add(groupKey);
-        uniqueIndices.push(idx);
-      }
+      if (seenGroups.has(groupKey)) return;
+      seenGroups.add(groupKey);
+
+      // Skip if this combo or any of its duplicates was already done
+      const allLabels = [c.label, ...(DUP_MAP[idx] || []).map(i => COMBOS[i].label)];
+      if (allLabels.some(l => done.has(l))) return;
+
+      candidates.push({ idx, weight: getPrognosisWeight(c) });
     });
-    const idx = uniqueIndices[Math.floor(Math.random() * uniqueIndices.length)];
+
+    // If everything is done, fall back to full pool without filtering
+    if (candidates.length === 0) {
+      seenGroups.clear();
+      COMBOS.forEach((c, idx) => {
+        const groupKey = DUP_MAP[idx] ? DUP_MAP[idx].join(',') : String(idx);
+        if (!seenGroups.has(groupKey)) {
+          seenGroups.add(groupKey);
+          candidates.push({ idx, weight: getPrognosisWeight(c) });
+        }
+      });
+    }
+
+    // Weighted random selection (higher weight = more likely to be picked)
+    const totalWeight = candidates.reduce((sum, c) => sum + c.weight, 0);
+    let rand = Math.random() * totalWeight;
+    let chosen = candidates[candidates.length - 1];
+    for (const c of candidates) {
+      rand -= c.weight;
+      if (rand <= 0) { chosen = c; break; }
+    }
+    const idx = chosen.idx;
     const combo = COMBOS[idx];
     // Apply to all 3 tasks
     document.getElementById('prompt-0').value = combo.t1 || '';
@@ -2183,10 +2247,12 @@
         if (comboSel) comboSel.value = idx;
       }
     }
-    switchTab(0);
     checkAlreadyDone(0, idx);
     checkAlreadyDone(1, idx);
     checkAlreadyDone(2, idx);
+    showThemeBadge(0, idx, 't1');
+    showThemeBadge(1, idx, 't2');
+    showThemeBadge(2, idx, 't3');
   }
 
   function escHtml(str) {
