@@ -2295,8 +2295,20 @@ ${responseText}
 3. Vocabulaire (étendue et précision)
 4. Grammaire et syntaxe
 
-IMPORTANT : Réponds UNIQUEMENT avec un objet JSON valide. Pas de texte avant, pas de texte après, pas de balises markdown, pas de backticks. Toutes les valeurs de type string doivent tenir sur une seule ligne (pas de retours à la ligne dans les valeurs). Format exact :
-{"score":4,"note":"12/20","resume":"...","points_forts":["...","..."],"axes":["...","..."],"erreurs":["...","...","..."],"texte_corrige":"..."}
+IMPORTANT : Réponds UNIQUEMENT avec un objet JSON valide. Pas de texte avant, pas de texte après, pas de balises markdown, pas de backticks. Toutes les valeurs de type string doivent tenir sur une seule ligne (pas de retours à la ligne dans les valeurs).
+
+RÈGLE ABSOLUE pour le champ "erreurs" : chaque élément du tableau DOIT suivre ce format exact et aucun autre :
+**mot_erroné** → correction correcte
+Exemples valides :
+"**groissessemnt** → grossissement"
+"**afin de ameniser** → afin d'atténuer (élision + mot inexistant)"
+"**se chien** → son chien (mauvais possessif)"
+INTERDIT : ne jamais écrire une phrase descriptive comme "il y a des erreurs de grammaire" ou "le candidat utilise...". Chaque entrée doit montrer le mot erroné en gras, puis →, puis la correction.
+
+Pour le champ "texte_corrige", entoure chaque mot corrigé avec **mot** pour le mettre en gras.
+
+Format JSON exact :
+{"score":4,"note":"12/20","resume":"...","points_forts":["...","..."],"axes":["...","..."],"erreurs":["**mot_erroné** → correction","**autre_erreur** → correction"],"texte_corrige":"..."}
 
 score : entier de 1 à 8 (1=CLB4, 2=CLB5, 3=CLB6, 4=CLB7, 5=CLB8, 6=CLB9, 7=CLB10, 8=CLB11-12)`;
 
@@ -2377,7 +2389,7 @@ score : entier de 1 à 8 (1=CLB4, 2=CLB5, 3=CLB6, 4=CLB7, 5=CLB8, 6=CLB9, 7=CLB1
     if (r.points_forts?.length) html += sec('✅ Points forts',          'ai-sec-green',  list(r.points_forts));
     if (r.axes?.length)         html += sec('💡 Axes d\'amélioration',  'ai-sec-yellow', list(r.axes));
     if (r.erreurs?.length)      html += sec('🔴 Corrections concrètes', 'ai-sec-red',    list(r.erreurs));
-    if (r.texte_corrige)        html += sec('✏️ Version corrigée',      'ai-sec-purple', `<p style="white-space:pre-wrap">${esc(r.texte_corrige)}</p>`);
+    if (r.texte_corrige)        html += sec('✏️ Version corrigée',      'ai-sec-purple', `<p style="white-space:pre-wrap">${escBold(r.texte_corrige)}</p>`);
 
     document.getElementById('aiSections').innerHTML = html;
     document.getElementById('aiRes').classList.add('show');
@@ -2386,8 +2398,11 @@ score : entier de 1 à 8 (1=CLB4, 2=CLB5, 3=CLB6, 4=CLB7, 5=CLB8, 6=CLB9, 7=CLB1
   function sec(title, cls, body) {
     return `<div class="ai-section ${cls}"><div class="ai-section-title">${title}</div>${body}</div>`;
   }
-  function list(arr) { return '<ul>' + arr.map(x => `<li>${esc(x)}</li>`).join('') + '</ul>'; }
+  function list(arr) { return '<ul>' + arr.map(x => `<li>${escBold(x)}</li>`).join('') + '</ul>'; }
   function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function escBold(s) {
+    return esc(String(s)).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  }
   function aiShowErr(msg) { const e = document.getElementById('aiErr'); e.textContent = msg; e.classList.add('show'); }
 </script>
 
