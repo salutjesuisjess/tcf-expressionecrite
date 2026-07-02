@@ -1009,15 +1009,90 @@
   .already-done-banner.visible { display: flex; }
   .already-done-banner strong { font-weight: 700; }
 
+  /* ── Topbar Menu Dropdown ── */
+  .topbar-menu {
+    position: relative;
+  }
+
+  .topbar-menu-btn {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    color: var(--text);
+    transition: all 0.2s;
+  }
+
+  .topbar-menu-btn:hover { background: var(--border); }
+
+  .topbar-menu-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 220px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    padding: 8px;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 300;
+  }
+
+  .topbar-menu-dropdown.open { display: flex; }
+
+  .topbar-menu-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 4px 8px 2px;
+  }
+
+  .topbar-menu-dropdown a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    text-decoration: none;
+    border-radius: 8px;
+    padding: 9px 10px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .topbar-menu-dropdown a:hover {
+    background: var(--accent);
+    color: var(--accent-text);
+  }
 </style>
 </head>
 <body data-theme="light">
 
 <header>
-  <div class="logo">
-    <span class="logo-label">TCF Canada</span>
-    <span style="color:var(--border);font-size:14px">·</span>
-    <span class="logo-title">Expression Écrite</span>
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="topbar-menu" id="topbarMenu">
+      <button class="topbar-menu-btn" id="topbarMenuBtn" onclick="toggleTopbarMenu(event)" title="Autres modules" aria-haspopup="true" aria-expanded="false">☰</button>
+      <div class="topbar-menu-dropdown" id="topbarMenuDropdown">
+        <span class="topbar-menu-label">Autres modules</span>
+        <a href="https://salutjesuisjess.github.io/tcf-comprehensionorale/" target="_blank" rel="noopener">🎧 Compréhension Orale</a>
+        <a href="https://salutjesuisjess.github.io/tcf-expressionorale/" target="_blank" rel="noopener">🎙️ Expression Orale</a>
+      </div>
+    </div>
+    <div class="logo">
+      <span class="logo-label">TCF Canada</span>
+      <span style="color:var(--border);font-size:14px">·</span>
+      <span class="logo-title">Expression Écrite</span>
+    </div>
   </div>
   <div class="header-actions">
     <span class="save-indicator" id="saveIndicator">💾 Sauvegardé</span>
@@ -2470,6 +2545,31 @@ score : entier de 1 à 8 (1=CLB4, 2=CLB5, 3=CLB6, 4=CLB7, 5=CLB8, 6=CLB9, 7=CLB1
     return esc(String(s)).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   }
   function aiShowErr(msg) { const e = document.getElementById('aiErr'); e.textContent = msg; e.classList.add('show'); }
+
+  function toggleTopbarMenu(e) {
+    e.stopPropagation();
+    const dropdown = document.getElementById('topbarMenuDropdown');
+    const btn = document.getElementById('topbarMenuBtn');
+    const isOpen = dropdown.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+
+  document.addEventListener('click', function(e) {
+    const menu = document.getElementById('topbarMenu');
+    const dropdown = document.getElementById('topbarMenuDropdown');
+    if (dropdown.classList.contains('open') && !menu.contains(e.target)) {
+      dropdown.classList.remove('open');
+      document.getElementById('topbarMenuBtn').setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const dropdown = document.getElementById('topbarMenuDropdown');
+      dropdown.classList.remove('open');
+      document.getElementById('topbarMenuBtn').setAttribute('aria-expanded', 'false');
+    }
+  });
 </script>
 
 <!-- ══ AI Correction Modal ══ -->
