@@ -1685,11 +1685,11 @@
             ✨ Correction IA — ${escHtml(item.aiNote)} · ${escHtml(item.aiClb || '')} &nbsp;<span style="margin-left:auto;font-size:10px;opacity:.7">▼ Voir détails</span>
           </summary>
           <div style="margin-top:6px;padding:12px;background:var(--surface);border:1px solid #c4b5fd;border-radius:8px;font-size:12px;display:flex;flex-direction:column;gap:10px;">
-            ${item.aiResume ? `<div><strong style="color:#1e40af">📊 Résumé</strong><p style="margin-top:4px;color:var(--text)">${escHtml(item.aiResume)}</p></div>` : ''}
-            ${item.aiPointsForts && item.aiPointsForts.length ? `<div><strong style="color:#16a34a">✅ Points forts</strong><ul style="margin-top:4px;padding-left:18px;">${item.aiPointsForts.map(x=>`<li style="color:var(--text);margin-bottom:3px">${escHtml(x)}</li>`).join('')}</ul></div>` : ''}
-            ${item.aiAxes && item.aiAxes.length ? `<div><strong style="color:#d97706">💡 Axes d'amélioration</strong><ul style="margin-top:4px;padding-left:18px;">${item.aiAxes.map(x=>`<li style="color:var(--text);margin-bottom:3px">${escHtml(x)}</li>`).join('')}</ul></div>` : ''}
-            ${item.aiErreurs && item.aiErreurs.length ? `<div><strong style="color:#dc2626">🔴 Corrections concrètes</strong><ul style="margin-top:4px;padding-left:18px;">${item.aiErreurs.map(x=>`<li style="color:var(--text);margin-bottom:3px">${escHtml(x)}</li>`).join('')}</ul></div>` : ''}
-            ${item.aiCorrige ? `<div><strong style="color:#7c3aed">✏️ Version corrigée</strong><p style="margin-top:4px;white-space:pre-wrap;background:var(--surface2);padding:8px;border-radius:6px;border:1px solid var(--border);color:var(--text)">${escHtml(item.aiCorrige)}</p></div>` : ''}
+            ${item.aiResume ? `<div><strong style="color:#1e40af">📊 Résumé</strong><p style="margin-top:4px;color:var(--text)">${escBold(item.aiResume)}</p></div>` : ''}
+            ${item.aiPointsForts && item.aiPointsForts.length ? `<div><strong style="color:#16a34a">✅ Points forts</strong><ul style="margin-top:4px;padding-left:18px;">${item.aiPointsForts.map(x=>`<li style="color:var(--text);margin-bottom:3px">${escBold(x)}</li>`).join('')}</ul></div>` : ''}
+            ${item.aiAxes && item.aiAxes.length ? `<div><strong style="color:#d97706">💡 Axes d'amélioration</strong><ul style="margin-top:4px;padding-left:18px;">${item.aiAxes.map(x=>`<li style="color:var(--text);margin-bottom:3px">${escBold(x)}</li>`).join('')}</ul></div>` : ''}
+            ${item.aiErreurs && item.aiErreurs.length ? `<div><strong style="color:#dc2626">🔴 Corrections concrètes</strong><ul style="margin-top:4px;padding-left:18px;">${item.aiErreurs.map(x=>`<li style="color:var(--text);margin-bottom:3px">${escBold(x)}</li>`).join('')}</ul></div>` : ''}
+            ${item.aiCorrige ? `<div><strong style="color:#7c3aed">✏️ Version corrigée</strong><p style="margin-top:4px;white-space:pre-wrap;background:var(--surface2);padding:8px;border-radius:6px;border:1px solid var(--border);color:var(--text)">${escBold(item.aiCorrige)}</p></div>` : ''}
           </div>
         </details>` : '';
 
