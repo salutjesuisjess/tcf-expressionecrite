@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCF Canada — Expression Écrite CLB 8</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f4f0;color:#1a1a18;min-height:100vh;padding:1.5rem 1rem}
+.app{max-width:800px;margin:0 auto}
+.header{margin-bottom:1.2rem}
+.header h1{font-size:27px;font-weight:600;letter-spacing:-0.02em}
+.header p{font-size:17px;color:#6b6b67;margin-top:3px}
+.clb-badge{display:inline-block;background:#0F6E56;color:#E1F5EE;font-size:14px;font-weight:600;padding:3px 10px;border-radius:99px;margin-left:8px;vertical-align:middle}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.2rem}
+.stat-card{background:#fff;border:0.5px solid #d9d8d2;border-radius:10px;padding:12px 14px}
+.stat-card .label{font-size:14px;color:#6b6b67;margin-bottom:3px}
+.stat-card .value{font-size:26px;font-weight:600;color:#1a1a18}
+.stat-card .sub{font-size:14px;color:#aaa;margin-top:1px}
+
+/* Tâche nav */
+.tache-nav{display:flex;gap:0;margin-bottom:1.2rem;border:0.5px solid #d9d8d2;border-radius:10px;overflow:hidden;background:#fff}
+.tache-btn{flex:1;padding:10px 6px;font-size:17px;font-weight:500;border:none;background:transparent;cursor:pointer;color:#6b6b67;border-right:0.5px solid #d9d8d2;transition:all .15s;font-family:inherit}
+.tache-btn:last-child{border-right:none}
+.tache-btn.active{background:#1a1a18;color:#fff}
+.tache-btn span{display:block;font-size:13px;font-weight:400;opacity:.7;margin-top:1px}
+
+/* Sub-nav */
+.sub-nav{display:flex;gap:6px;margin-bottom:1.2rem;flex-wrap:wrap}
+.sub-btn{padding:6px 14px;font-size:16px;font-weight:500;border:0.5px solid #d9d8d2;border-radius:99px;cursor:pointer;background:#fff;color:#6b6b67;transition:all .15s;font-family:inherit}
+.sub-btn:hover{background:#f0efeb}
+.sub-btn.active{background:#1a1a18;border-color:#1a1a18;color:#fff}
+
+.section{display:none}
+.section.active{display:block}
+.sub-section{display:none}
+.sub-section.active{display:block}
+
+/* Info row */
+.info-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1rem}
+.info-card{background:#fff;border:0.5px solid #d9d8d2;border-radius:10px;padding:11px 13px}
+.info-card .ic-label{font-size:13px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.info-card .ic-val{font-size:17px;color:#1a1a18;font-weight:500;line-height:1.4}
+
+/* Tip box */
+.tip-box{background:#fff;border-left:3px solid #1D9E75;border-radius:0 10px 10px 0;padding:11px 14px;margin-bottom:1rem}
+.tip-box.amber{border-left-color:#BA7517}
+.tip-box.blue{border-left-color:#185FA5}
+.tip-box h3{font-size:17px;font-weight:600;color:#1a1a18;margin-bottom:4px}
+.tip-box p{font-size:17px;color:#555;line-height:1.6}
+.tip-box em{font-style:italic;color:#1a1a18}
+
+/* Template card */
+.tpl-list{display:flex;flex-direction:column;gap:10px;margin-bottom:1.2rem}
+.tpl-card{background:#fff;border:0.5px solid #d9d8d2;border-radius:12px;overflow:hidden}
+.tpl-header{display:flex;align-items:center;gap:11px;padding:13px 15px;cursor:pointer;transition:background .1s;user-select:none}
+.tpl-header:hover{background:#f9f9f7}
+.tpl-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;flex-shrink:0}
+.tpl-info{flex:1}
+.tpl-name{font-size:18px;font-weight:600;color:#1a1a18}
+.tpl-sub{font-size:16px;color:#6b6b67;margin-top:1px}
+.tpl-arrow{font-size:21px;color:#bbb;transition:transform .2s;line-height:1}
+.tpl-card.open .tpl-arrow{transform:rotate(180deg)}
+.tpl-body{display:none;border-top:0.5px solid #ebebeb;padding:14px 15px}
+.tpl-card.open .tpl-body{display:block}
+
+/* Template body sections */
+.tpl-section-title{font-size:13px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.steps{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.step{display:flex;gap:9px;align-items:flex-start}
+.step-num{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0;margin-top:1px}
+.step-text{font-size:17px;color:#333;line-height:1.5}
+
+/* CLB 8 phrases block */
+.clb-block{background:#f7f7f5;border-radius:8px;padding:12px 13px;margin-bottom:12px}
+.clb-block-title{font-size:13px;font-weight:600;color:#0F6E56;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.phrase-list{display:flex;flex-direction:column;gap:5px}
+.phrase-item{display:flex;gap:8px;align-items:flex-start}
+.phrase-role{font-size:14px;color:#888;min-width:70px;flex-shrink:0;margin-top:2px;font-style:italic}
+.phrase-text{font-size:16px;color:#1a1a18;line-height:1.5;font-style:italic}
+
+/* Tags */
+.tag-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.tag{font-size:14px;padding:3px 9px;border-radius:99px}
+
+/* Consignes block */
+.consignes-list{display:flex;flex-direction:column;gap:8px}
+.consigne-item{background:#f7f7f5;border-radius:8px;padding:11px 13px;border-left:3px solid #d9d8d2}
+.consigne-label{font-size:13px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.consigne-text{font-size:17px;color:#333;line-height:1.6;font-style:italic}
+
+/* Category accordion */
+.cat-list{display:flex;flex-direction:column;gap:8px}
+.cat-card{background:#fff;border:0.5px solid #d9d8d2;border-radius:12px;overflow:hidden}
+.cat-header{display:flex;align-items:center;gap:9px;padding:12px 15px;cursor:pointer;transition:background .1s;user-select:none}
+.cat-header:hover{background:#f9f9f7}
+.cat-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.cat-title{font-size:18px;font-weight:500;color:#1a1a18;flex:1}
+.cat-count{font-size:16px;color:#aaa;margin-right:6px}
+.cat-arrow{font-size:21px;color:#bbb;transition:transform .2s;line-height:1}
+.cat-card.open .cat-arrow{transform:rotate(180deg)}
+.cat-body{display:none;border-top:0.5px solid #ebebeb;padding:10px 15px}
+.cat-card.open .cat-body{display:block}
+.scenario-list{list-style:none}
+.scenario-list li{display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:0.5px solid #f2f1ed;font-size:17px}
+.scenario-list li:last-child{border-bottom:none}
+.s-info{flex:1}
+.s-name{font-size:17px;color:#1a1a18;font-weight:500;line-height:1.4}
+.s-desc{font-size:16px;color:#888;margin-top:1px}
+.occ{font-size:14px;font-weight:600;padding:2px 8px;border-radius:99px;flex-shrink:0;margin-top:2px;white-space:nowrap}
+.occ-h{background:#FAECE7;color:#993C1D}
+.occ-m{background:#E6F1FB;color:#185FA5}
+.occ-l{background:#EAF3DE;color:#3B6D11}
+
+/* Template example */
+.example-box{background:#f0f7f4;border-radius:8px;padding:12px 13px;margin-top:10px;border:0.5px solid #9FE1CB}
+.example-box-title{font-size:13px;font-weight:600;color:#0F6E56;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.example-text{font-size:16px;color:#1a1a18;line-height:1.7;font-style:italic}
+.example-word-count{font-size:14px;color:#888;margin-top:6px}
+
+@media(max-width:520px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  .info-row{grid-template-columns:1fr}
+  .tache-btn span{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="header">
+  <h1>Expression Écrite — TCF Canada <span class="clb-badge">CLB 8</span></h1>
+  <p>Guide stratégique 2022–2026 · Templates, consignes réelles et phrases niveau B2/C1</p>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card"><div class="label">Tâches</div><div class="value">3</div><div class="sub">Niveaux distincts</div></div>
+  <div class="stat-card"><div class="label">Templates</div><div class="value">13</div><div class="sub">5 + 5 + 3 modèles</div></div>
+  <div class="stat-card"><div class="label">Scénarios</div><div class="value">100+</div><div class="sub">Sources 2022–2026</div></div>
+  <div class="stat-card"><div class="label">Consignes</div><div class="value">105</div><div class="sub">Exemples réels</div></div>
+</div>
+
+<div class="tache-nav">
+  <button class="tache-btn active" onclick="showTache('t1',this)">Tâche 1<span>60–120 mots · Message court</span></button>
+  <button class="tache-btn" onclick="showTache('t2',this)">Tâche 2<span>120–150 mots · Récit/Opinion</span></button>
+  <button class="tache-btn" onclick="showTache('t3',this)">Tâche 3<span>Synthèse + Opinion</span></button>
+</div>
+
+<!-- ===================== TÂCHE 1 ===================== -->
+<div id="t1" class="section active">
+  <div class="info-row">
+    <div class="info-card"><div class="ic-label">Format</div><div class="ic-val">60 à 120 mots</div></div>
+    <div class="info-card"><div class="ic-label">Support</div><div class="ic-val">Email, message, courriel</div></div>
+    <div class="info-card"><div class="ic-label">Objectif CLB 8</div><div class="ic-val">Registre adapté + connecteurs variés</div></div>
+  </div>
+  <div class="tip-box">
+    <h3>Stratégie CLB 8 pour la Tâche 1</h3>
+    <p>Le correcteur cherche : <em>registre approprié</em> (formel ou familier selon le destinataire), <em>connecteurs variés</em> (non seulement « et » et « mais »), <em>lexique précis</em> et <em>aucune répétition directe</em> de la consigne. Éviter les formules basiques comme « Je t'écris pour… » — préférer des ouvertures plus sophistiquées.</p>
+  </div>
+
+  <div class="sub-nav">
+    <button class="sub-btn active" onclick="showSub('t1','t1-tpl',this)">Templates CLB 8</button>
+    <button class="sub-btn" onclick="showSub('t1','t1-consignes',this)">Consignes réelles</button>
+    <button class="sub-btn" onclick="showSub('t1','t1-cats',this)">Scénarios & fréquences</button>
+  </div>
+
+  <div id="t1-tpl" class="sub-section active">
+    <div class="tpl-list" id="t1-tpl-list"></div>
+  </div>
+  <div id="t1-consignes" class="sub-section">
+    <div id="t1-consignes-list"></div>
+  </div>
+  <div id="t1-cats" class="sub-section">
+    <div class="cat-list" id="t1-cats-list"></div>
+  </div>
+</div>
+
+<!-- ===================== TÂCHE 2 ===================== -->
+<div id="t2" class="section">
+  <div class="info-row">
+    <div class="info-card"><div class="ic-label">Format</div><div class="ic-val">120 à 150 mots</div></div>
+    <div class="info-card"><div class="ic-label">Support</div><div class="ic-val">Blog, forum, email formel</div></div>
+    <div class="info-card"><div class="ic-label">Objectif CLB 8</div><div class="ic-val">Passé composé + imparfait + opinion</div></div>
+  </div>
+  <div class="tip-box amber">
+    <h3>Stratégie CLB 8 pour la Tâche 2</h3>
+    <p>Pour atteindre le CLB 8 : utiliser <em>passé composé ET imparfait</em> dans la narration (jamais un seul temps), varier les connecteurs d'opinion (<em>À mon sens, Il me semble que, Force est de constater que</em>), et terminer par une phrase de projection ou d'invitation à réagir.</p>
+  </div>
+
+  <div class="sub-nav">
+    <button class="sub-btn active" onclick="showSub('t2','t2-tpl',this)">Templates CLB 8</button>
+    <button class="sub-btn" onclick="showSub('t2','t2-consignes',this)">Consignes réelles</button>
+    <button class="sub-btn" onclick="showSub('t2','t2-cats',this)">Scénarios & fréquences</button>
+  </div>
+
+  <div id="t2-tpl" class="sub-section active">
+    <div class="tpl-list" id="t2-tpl-list"></div>
+  </div>
+  <div id="t2-consignes" class="sub-section">
+    <div id="t2-consignes-list"></div>
+  </div>
+  <div id="t2-cats" class="sub-section">
+    <div class="cat-list" id="t2-cats-list"></div>
+  </div>
+</div>
+
+<!-- ===================== TÂCHE 3 ===================== -->
+<div id="t3" class="section">
+  <div class="info-row">
+    <div class="info-card"><div class="ic-label">Format</div><div class="ic-val">Synthèse 40–90 mots + Opinion 120–150 mots</div></div>
+    <div class="info-card"><div class="ic-label">Sources</div><div class="ic-val">2 documents à analyser</div></div>
+    <div class="info-card"><div class="ic-label">Objectif CLB 8</div><div class="ic-val">Neutralité → prise de position nuancée</div></div>
+  </div>
+  <div class="tip-box blue">
+    <h3>Stratégie CLB 8 pour la Tâche 3</h3>
+    <p>La <em>coquille de synthèse</em> est toujours fixe — mémoriser : <em>« Le premier document met en avant… tandis que le second souligne… Ces deux textes s'opposent sur la question de… »</em>. Pour l'opinion, le CLB 8 exige une <em>concession argumentée</em> : reconnaître l'autre point de vue avant de défendre le sien.</p>
+  </div>
+
+  <div class="sub-nav">
+    <button class="sub-btn active" onclick="showSub('t3','t3-tpl',this)">Templates CLB 8</button>
+    <button class="sub-btn" onclick="showSub('t3','t3-consignes',this)">Consignes réelles</button>
+    <button class="sub-btn" onclick="showSub('t3','t3-cats',this)">Scénarios & fréquences</button>
+  </div>
+
+  <div id="t3-tpl" class="sub-section active">
+    <div class="tpl-list" id="t3-tpl-list"></div>
+  </div>
+  <div id="t3-consignes" class="sub-section">
+    <div id="t3-consignes-list"></div>
+  </div>
+  <div id="t3-cats" class="sub-section">
+    <div class="cat-list" id="t3-cats-list"></div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+
+const t1Templates = [
+  {
+    num:1, bg:"#E1F5EE", fg:"#0F6E56",
+    name:"L'Invitation",
+    sub:"Anniversaires, fêtes, événements culturels, pique-niques",
+    freq:"Scénario le plus fréquent — 19 + 14 + 12 occ.",
+    steps:[
+      "Formule d'ouverture situationnelle (ne pas commencer par « Je t'écris »)",
+      "Annonce de l'événement avec détails précis (date, lieu, heure)",
+      "Programme ou informations complémentaires (menu, activités, tenue)",
+      "Demande de confirmation + formule de clôture adaptée au registre"
+    ],
+    phrases:[
+      {role:"Ouverture", text:"J'ai une excellente nouvelle à t'annoncer et j'espère que tu seras disponible..."},
+      {role:"Ouverture", text:"Cela fait un moment que nous ne nous sommes pas retrouvés tous ensemble, et j'ai pensé à une occasion idéale..."},
+      {role:"Invitation", text:"Je t'invite chaleureusement à nous rejoindre pour..."},
+      {role:"Détails", text:"L'événement aura lieu le [DATE] à partir de [HEURE], au [LIEU], facilement accessible en transports en commun."},
+      {role:"Programme", text:"Au programme : [ACTIVITÉ 1], suivi de [ACTIVITÉ 2], sans oublier [ACTIVITÉ 3]."},
+      {role:"Clôture fam.", text:"N'hésite pas à me confirmer ta présence dès que possible — ta réponse compte beaucoup pour moi !"},
+      {role:"Clôture form.", text:"Je reste à ta disposition pour tout renseignement complémentaire et me réjouis de ta réponse."}
+    ],
+    example:{
+      title:"Exemple — Anniversaire surprise",
+      text:"Chère Sophie,\n\nJ'espère que tu vas bien ! J'ai une nouvelle passionnante à te partager : nous organisons une fête surprise pour l'anniversaire de Léa, le samedi 15 juin à partir de 19h, chez moi au 12 rue des Lilas.\n\nAu programme : buffet dînatoire, musique et quelques discours touchants. Nous aimerions également lui offrir un cadeau commun — un week-end spa. La participation serait de 30 € par personne.\n\nMerci de confirmer ta présence avant le 10 juin afin que tout soit parfait. Je compte sur ta discrétion ! À très vite,\nMarc",
+      words:96
+    },
+    tags:["Anniversaire surprise (19 occ.)","Fête au restaurant (14 occ.)","Fin d'année (12 occ.)","Bibliothèque (8 occ.)","Pique-nique (4 occ.)"]
+  },
+  {
+    num:2, bg:"#E6F1FB", fg:"#185FA5",
+    name:"Les Nouvelles",
+    sub:"Nouveau poste, nouveaux locaux, vie universitaire",
+    freq:"Récurrent — 16 + 13 + 8 occ.",
+    steps:[
+      "Accroche enthousiaste qui contextualise immédiatement la nouvelle",
+      "Description précise du cadre (lieu, personnes, ambiance)",
+      "Anecdote ou détail mémorable qui humanise le récit",
+      "Question ouverte pour maintenir le lien + clôture chaleureuse"
+    ],
+    phrases:[
+      {role:"Accroche", text:"Quelle semaine incroyable je viens de vivre ! Je me dois absolument de tout te raconter."},
+      {role:"Accroche", text:"J'ai une nouvelle qui me tient à cœur et dont j'avais hâte de te faire part..."},
+      {role:"Description", text:"L'endroit est [adjectif] : [description du lieu]. On y trouve [détail 1] et [détail 2], ce qui rend l'atmosphère vraiment [adjectif]."},
+      {role:"Équipe", text:"Mes nouveaux collègues se sont montrés particulièrement accueillants — [NOM] m'a même proposé de..."},
+      {role:"Impression", text:"Ce qui m'a le plus frappé(e), c'est sans doute [ÉLÉMENT], qui dépasse vraiment mes attentes."},
+      {role:"Clôture", text:"Et toi, quoi de neuf de ton côté ? J'attends tes nouvelles avec impatience. Grosses bises,"}
+    ],
+    example:{
+      title:"Exemple — Nouveaux locaux (Lucas)",
+      text:"Salut Lucas,\n\nQuelle semaine de folie ! Je viens enfin d'explorer nos nouveaux locaux et je me dois de tout te raconter. L'immeuble est situé en plein centre-ville, à deux pas du métro Châtelet, ce qui facilite vraiment les déplacements.\n\nLes bureaux sont spacieux et baignés de lumière naturelle. On dispose désormais d'une grande salle de réunion équipée, d'une cuisine moderne et même d'une terrasse pour les pauses. L'ambiance est vraiment dynamisante !\n\nCe qui m'a le plus surpris, c'est la qualité du matériel informatique mis à notre disposition. Tu vas adorer ! Quand passes-tu nous rendre visite ?\n\nÀ bientôt, Antoine",
+      words:105
+    },
+    tags:["Nouveaux locaux Lucas (16 occ.)","Nouvel emploi (13 occ.)","Vie universitaire (8 occ.)","Vitoire en compétition (8 occ.)"]
+  },
+  {
+    num:3, bg:"#FAEEDA", fg:"#854F0B",
+    name:"Aide & Instructions",
+    sub:"Demandes d'aide, consignes domestiques, organisation",
+    freq:"Régulier — 14 + 11 occ.",
+    steps:[
+      "Explication de la situation qui justifie la demande (absence, déménagement...)",
+      "Énumération claire et ordonnée des tâches (D'abord / Ensuite / Puis / Enfin)",
+      "Précisions pratiques (matériel disponible, horaires, contacts utiles)",
+      "Remerciements sincères et chaleureux + offre de réciprocité"
+    ],
+    phrases:[
+      {role:"Contexte", text:"Je pars en déplacement du [DATE] au [DATE] et j'aurais besoin de ton aide pour..."},
+      {role:"Intro liste", text:"Voici les quelques tâches dont je te confierais la responsabilité :"},
+      {role:"Tâche 1", text:"Dans un premier temps, il faudrait [TÂCHE 1] — tu trouveras tout le nécessaire dans [LIEU]."},
+      {role:"Tâche 2", text:"Ensuite, je te serais reconnaissant(e) de bien vouloir [TÂCHE 2] tous les [JOURS]."},
+      {role:"Tâche 3", text:"Enfin, n'oublie pas de [TÂCHE 3] avant le [DATE]."},
+      {role:"Contact", text:"En cas de problème, n'hésite pas à contacter [NOM] au [NUMÉRO] — il/elle est au courant de la situation."},
+      {role:"Merci", text:"Je ne sais vraiment pas ce que je ferais sans toi ! Je te revaudrai ça à mon retour, c'est promis."}
+    ],
+    example:{
+      title:"Exemple — Instructions pour Cédric (jardin & maison)",
+      text:"Cher Cédric,\n\nJe pars en vacances du 1er au 15 août et je fais appel à ta gentillesse pour garder un œil sur ma maison.\n\nDans un premier temps, merci d'arroser les plantes du jardin tous les deux jours, le matin de préférence — l'arrosoir se trouve dans la remise. Ensuite, pense à récupérer le courrier chaque jour et à le poser sur la table de la cuisine. Enfin, si tu remarques quoi que ce soit d'anormal, n'hésite pas à appeler ma voisine Mme Dupont au 06 12 34 56 78.\n\nJe te laisse le double des clés. Un grand merci pour ce service ! Je t'invite à dîner à mon retour. Amicalement, Paul",
+      words:117
+    },
+    tags:["Aide déménagement (14 occ.)","Instructions Cédric (11 occ.)","Organisation logistique"]
+  },
+  {
+    num:4, bg:"#FBEAF0", fg:"#993556",
+    name:"Annonce & Transaction",
+    sub:"Ventes, colocation, location, annonces classées",
+    freq:"Fréquent — 15 + 13 + 11 occ.",
+    steps:[
+      "Objet précis de l'annonce (ce que vous proposez ou recherchez)",
+      "Description détaillée et honnête (état, caractéristiques, avantages)",
+      "Conditions claires (prix, disponibilité, modalités)",
+      "Invitation à prendre contact + proposition de rendez-vous"
+    ],
+    phrases:[
+      {role:"Accroche", text:"Suite à votre annonce / J'ai le plaisir de vous proposer à la vente..."},
+      {role:"Description", text:"Il/Elle est en excellent état, ayant été [utilisé/entretenu] avec soin. Parmi ses caractéristiques principales, on notera : [LISTE]."},
+      {role:"Prix", text:"Je le/la cède au prix de [PRIX] €, ce qui me semble tout à fait raisonnable compte tenu de son état."},
+      {role:"Essai/Visite", text:"Je vous propose de venir l'essayer / visiter le logement à votre convenance — je suis disponible [JOURS] entre [HEURES]."},
+      {role:"Colocataire", text:"Je recherche une personne sérieuse et respectueuse, idéalement [PROFIL], pour partager cet appartement dans une atmosphère conviviale."},
+      {role:"Clôture", text:"N'hésitez pas à me contacter par retour de courriel ou au [NUMÉRO] pour convenir d'un rendez-vous."}
+    ],
+    example:{
+      title:"Exemple — Vente de vélo",
+      text:"Bonjour,\n\nSuite à votre message concernant mon annonce, je suis ravi(e) de vous donner plus de détails sur le vélo proposé à la vente.\n\nIl s'agit d'un VTT de la marque Trek, modèle 2021, en très bon état général. Il a été utilisé essentiellement le week-end et régulièrement entretenu chez un professionnel. Il est équipé de 21 vitesses, d'un porte-bagages et d'un antivol de qualité. Je le cède au prix de 280 €, négociable.\n\nJe vous invite à venir l'essayer ce week-end, le samedi matin à partir de 10h par exemple. Mon adresse est le 5 avenue Victor Hugo. Dans l'attente de votre réponse, je reste disponible pour tout renseignement. Cordialement,",
+      words:114
+    },
+    tags:["Vente vélo (15 occ.)","Recherche colocataire (13 occ.)","Nouvel appartement (11 occ.)","Annonce location (7 occ.)"]
+  },
+  {
+    num:5, bg:"#FAECE7", fg:"#993C1D",
+    name:"Réclamation Formelle",
+    sub:"SAC, services insatisfaisants, objets endommagés",
+    freq:"Régulier — 5 + 9 occ. (Tâche 1) / 11 occ. (Tâche 2)",
+    steps:[
+      "Référence précise à la commande/prestation (numéro, date, contexte)",
+      "Description factuelle et détaillée du problème constaté",
+      "Expression mesurée du mécontentement (sans agressivité — CLB 8 = ton contrôlé)",
+      "Demande de solution spécifique + délai souhaité"
+    ],
+    phrases:[
+      {role:"Référence", text:"Je me permets de vous contacter suite à [ma commande n°X / mon séjour du DATE] afin de vous signaler..."},
+      {role:"Problème", text:"À ma grande surprise, j'ai constaté que [DESCRIPTION DU PROBLÈME], ce qui est loin de correspondre à ce qui avait été convenu."},
+      {role:"Impact", text:"Cette situation m'a causé [un préjudice financier / un désagrément considérable / une profonde déception]."},
+      {role:"Ton mesuré", text:"Je comprends que des imprévus peuvent survenir, mais je reste néanmoins dans l'attente d'une solution satisfaisante."},
+      {role:"Demande", text:"Je vous saurais gré de bien vouloir [procéder au remboursement / m'adresser un article de remplacement / me proposer un geste commercial] dans les meilleurs délais."},
+      {role:"Clôture", text:"Dans l'attente de votre retour, je reste à votre disposition et vous adresse mes cordiales salutations."}
+    ],
+    example:{
+      title:"Exemple — Réclamation SAC objet endommagé",
+      text:"Madame, Monsieur,\n\nJe me permets de vous contacter suite à ma commande n°45892 passée le 3 mai dernier afin de vous signaler un problème sérieux.\n\nÀ ma grande surprise, à la réception du colis, j'ai constaté que l'écran de la tablette commandée présentait une fissure importante, rendant l'appareil totalement inutilisable. L'emballage extérieur semblait pourtant intact. Cette situation me cause un préjudice évident, d'autant plus que le produit était destiné à un usage professionnel urgent.\n\nJe vous saurais gré de bien vouloir procéder à l'échange du produit ou à son remboursement intégral dans un délai de 7 jours ouvrables. Je reste à votre disposition pour tout renseignement complémentaire. Cordialement,",
+      words:112
+    },
+    tags:["SAC objet cassé (5 occ.)","Transport insatisfaisant (9 occ.)","Agence voyages (11 occ. T2)"]
+  }
+];
+
+const t1Consignes = [
+  {cat:"Convites & Eventos Sociais", color:"#1D9E75", items:[
+    {label:"Anniversaire surprise",text:"Écrivez un courriel à vos amis pour les inviter à un anniversaire surpris pour votre meilleure ami(e), et proposez de lui offrir un cadeau commun (lieu, cadeau, activités, etc.)."},
+    {label:"Fête de fin d'année",text:"Écrire un message pour inviter vos amis à une fête de fin d'année (date, lieu, programme)."},
+    {label:"Visite culturelle",text:"Vous voulez organiser une visite culturelle dans votre ville. Vous envoyez un message pour inviter vos amis. Vous leur donnez toutes les informations nécessaires (activités, date, lieu, etc.)."},
+    {label:"Pique-nique",text:"Invitez un ami à passer une journée avec vous, écrivez-lui un email en lui expliquant le lieu, la date, l'heure et les activités."},
+    {label:"Rencontre avec écrivain",text:"La bibliothèque de votre ville organise une rencontre avec un écrivain. Écrivez un message à votre ami(e) pour l'inviter à cet évènement."}
+  ]},
+  {cat:"Voyages & Tourisme", color:"#185FA5", items:[
+    {label:"Week-end entre amis",text:"Vous envisagez de partir en week-end avec vos amis le mois prochain. Rédigez un message pour leur présenter votre projet, incluant le lieu, les moyens de transport et les activités prévues."},
+    {label:"Hôtel pour Matthias",text:"Vous avez trouvé un hôtel pour Matthias. Vous lui écrivez un courriel. Dans ce message vous décrivez l'hôtel et vous lui donnez toutes les informations utiles (situation, tarif…)."},
+    {label:"Vacances chez vous",text:"Invitez votre ami(e) à venir passer les vacances chez vous. Dans votre message, décrivez les sites touristiques et les endroits intéressants à découvrir dans votre ville."},
+    {label:"Roteiro regional",text:"Votre ami(e) veut visiter la région où vous vivez. Écrivez-lui un message pour lui proposer quelques lieux intéressants à découvrir."},
+    {label:"Mariage au château",text:"Vous avez invité votre ami Cédric à votre mariage au Château de Chombony et il vous a répondu qu'il ne connait pas ce château. Décrivez à votre ami (lieu, localisation, transports, etc.)."}
+  ]},
+  {cat:"Logement & Déménagement", color:"#BA7517", items:[
+    {label:"Informer d'un déménagement",text:"Vous envisagez de déménager et avez trouvé un appartement. Vous souhaitez en informer un ami en lui fournissant les détails concernant le bien (nombre de pièces, emplacement et prix)."},
+    {label:"Demande d'aide (cartons)",text:"Vous allez bientôt déménager. Écrivez un message à votre ami(e) pour demander son aide en fournissant les informations (date, lieu, transports, etc.)."},
+    {label:"Recherche colocataire",text:"Vous occupez un grand appartement et recherchez un colocataire. Racontez la manière dont vous imaginez la colocation et présentez les particularités de votre logement."},
+    {label:"Annonce de location",text:"Vous avez mis en ligne une annonce pour la location de votre appartement. Écrivez un courriel à une personne intéressée pour lui donner les informations sur l'appartement et le quartier."},
+    {label:"Projet de décoration",text:"Vous voulez changer la décoration de votre appartement (meubles, peinture, objets, etc.). Vous écrivez un message à un(e) ami(e). Vous lui décrivez votre projet et vous lui demandez de vous aider."}
+  ]},
+  {cat:"Sport & Santé", color:"#639922", items:[
+    {label:"Recommander une salle",text:"Votre ami souhaite commencer à faire du sport. Rédigez un message pour lui recommander une salle de sport située dans votre quartier (localisation, tarifs, types d'activités, etc.)."},
+    {label:"Répondre sur la salle",text:"« Bonjour, on m'a dit que tu t'es inscrit dans une salle de sport intéressante. Peux-tu m'en dire plus ? » Vous lui répondez en décrivant cette salle (ambiance, matériel, prix, etc.)."},
+    {label:"Partenaire d'entraînement",text:"Écrivez un message dans le journal de votre université pour rechercher un partenaire avec qui faire du sport."},
+    {label:"Victoire en compétition",text:"Vous faites du sport dans un club. Vous venez de remporter une compétition. Vous écrivez un courriel à vos amis pour leur raconter cet évènement sportif et annoncer votre réussite."},
+    {label:"Inviter à pratiquer",text:"Envoyez un message à vos amis pour les inviter à passer un week-end chez vous et pratiquer ensemble des activités sportives."}
+  ]},
+  {cat:"Travail & Vie professionnelle", color:"#534AB7", items:[
+    {label:"Nouveaux locaux (Lucas)",text:"Répondez au courriel de votre ami Lucas pour lui donner des informations sur les nouveaux locaux de votre entreprise (lieu, disposition des pièces, équipements, etc.)."},
+    {label:"Annoncer un nouveau poste",text:"Vous venez d'obtenir un nouveau poste et souhaitez annoncer la nouvelle à votre amie francophone. Décrivez votre travail, vos collègues et votre environnement professionnel."},
+    {label:"Répondre à Ali",text:"Ali t'a envoyé un message pour savoir comment se passe ton nouveau travail... Tu lui réponds en décrivant ton emploi (lieu, ambiance, collègues, etc.) et en partageant tes impressions."},
+    {label:"Remerciements post-entretien",text:"Vous venez de participer à un entretien pour un emploi. Rédigez un message afin de remercier la personne qui vous a accueilli(e). Rappelez les circonstances et votre motivation."},
+    {label:"Avantages du métier",text:"Les professeurs de votre quartier veulent organiser une rencontre avec leurs élèves pour les orienter... vous leur écrivez un mail pour leur donner les avantages de votre profession."}
+  ]},
+  {cat:"Éducation & Vie universitaire", color:"#D85A30", items:[
+    {label:"Environnement universitaire (Alex)",text:"Vous avez reçu un message d'un ami Alex qui vous demande des nouvelles de votre nouvelle université. Vous lui répondez en décrivant brièvement votre environnement universitaire."},
+    {label:"École de langues",text:"Votre ami vous demande des informations sur votre école de langue. Vous devez lui répondre, en détaillant votre expérience dans cette école."},
+    {label:"Partenaires linguistiques",text:"Vous avez découvert une plateforme en ligne mettant en relation des personnes souhaitant apprendre le français... Rédigez un courriel pour vous présenter et expliquer votre motivation."},
+    {label:"Détails des cours",text:"Écrivez un message à votre ami(e) qui souhaite suivre des cours de langue dans votre école. Donnez les détails spécifiques (lieu, tarifs, types de cours disponibles, etc.)."},
+    {label:"Expérience d'échange",text:"Vous avez participé à un échange scolaire dans une école à l'étranger. Racontez à vos amis ce que vous avez aimé."}
+  ]},
+  {cat:"Vie pratique & Transactions", color:"#888780", items:[
+    {label:"Vente de vélo",text:"Vous avez un vélo à vendre. Vous écrivez un courriel pour décrire votre vélo et proposer un prix. Vous donnez un RDV pour essayer le vélo."},
+    {label:"Instructions pour Cédric",text:"Rédigez un message à votre ami Cédric pour lui fournir des instructions concernant l'entretien de votre maison et de votre jardin pendant votre absence."},
+    {label:"Transports pour Mehdi",text:"Votre ami Mehdi vient de s'installer dans votre ville et cherche des renseignements sur les moyens de transports. Écrivez un message (types de transport, abonnement, tarif, etc.)."},
+    {label:"Déjeuner en plein air (Barbara)",text:"Barbara t'a envoyé un message pour savoir où elle pourrait déjeuner en plein air ce week-end. Tu lui réponds en décrivant un lieu agréable (parc, jardin, terrasse, etc.)."},
+    {label:"Réclamation SAC",text:"Rédigez un e-mail au service client pour signaler la réception d'un objet endommagé après une commande en ligne. Décrivez le dommage et précisez la solution souhaitée."}
+  ]}
+];
+
+const t1Cats = [
+  {name:"Convites et Événements Sociaux", color:"#1D9E75", items:[
+    {n:"Anniversaire Surprise",d:"Invitation, cadeau commun, lieu et date",occ:19,lvl:"h"},
+    {n:"Anniversaire en Restaurant",d:"Détails du menu, prix et confirmation",occ:14,lvl:"h"},
+    {n:"Fête de Fin d'Année",d:"Invitation amis ou collègues, programme",occ:12,lvl:"h"},
+    {n:"Rencontre avec Écrivain",d:"Invitation conférence ou après-midi culturelle",occ:8,lvl:"m"},
+    {n:"Visite Culturelle en Ville",d:"Itinéraire historique avec des amis",occ:8,lvl:"m"},
+    {n:"Pique-nique",d:"Lieu adapté adultes et enfants",occ:4,lvl:"l"},
+  ]},
+  {name:"Voyages et Tourisme", color:"#185FA5", items:[
+    {n:"Description Région/Ville pour Ami",d:"Monuments, lieux favoris et transports",occ:16,lvl:"h"},
+    {n:"Logistique Matthias (Visa Canada / Hôtel)",d:"Hôtel pour la première semaine au Canada",occ:11,lvl:"h"},
+    {n:"Invitation à passer des Vacances",d:"Attractions de sa propre ville",occ:11,lvl:"h"},
+    {n:"Mariage au Château (Chombony)",d:"Localisation, accès, transports",occ:10,lvl:"m"},
+    {n:"Logistique Vacances en Groupe (Hôtel)",d:"Équipements, tarifs et localisation",occ:8,lvl:"m"},
+    {n:"Arrivée dans un Nouveau Pays",d:"Premières impressions et sentiments",occ:4,lvl:"l"},
+  ]},
+  {name:"Logement et Déménagement", color:"#BA7517", items:[
+    {n:"Demande d'Aide pour le Déménagement",d:"Date, horaires, trajets et tâches",occ:14,lvl:"h"},
+    {n:"Recherche de Colocataire",d:"Superficie, profil souhaité et loyer",occ:13,lvl:"h"},
+    {n:"Nouvel Appartement (Informer un Ami)",d:"Type, localisation et prix",occ:11,lvl:"h"},
+    {n:"Projet de Décoration / Rénovation",d:"Meubles, couleurs, demande d'aide",occ:8,lvl:"m"},
+    {n:"Annonce de Location (Intéressé)",d:"Répondre à quelqu'un qui a vu l'annonce",occ:7,lvl:"m"},
+    {n:"Recherche d'Agence Immobilière (Nice)",d:"Besoins pour déménagement nouvelle ville",occ:4,lvl:"l"},
+  ]},
+  {name:"Sport et Santé", color:"#639922", items:[
+    {n:"Recommander une Salle de Sport",d:"Localisation, tarifs, types de cours",occ:17,lvl:"h"},
+    {n:"Chercher un Partenaire d'Entraînement",d:"Annonce dans le journal universitaire",occ:11,lvl:"h"},
+    {n:"Victoire en Compétition",d:"Partager le succès et la joie",occ:8,lvl:"m"},
+    {n:"Invitation à Pratiquer Ensemble",d:"Convaincre un ami pour une activité physique",occ:6,lvl:"m"},
+  ]},
+  {name:"Travail et Vie Professionnelle", color:"#534AB7", items:[
+    {n:"Nouveaux Locaux de l'Entreprise (Lucas)",d:"Localisation, disposition, équipements",occ:16,lvl:"h"},
+    {n:"Nouvel Emploi (Annoncer / Impressions)",d:"Poste, collègues, environnement",occ:13,lvl:"h"},
+    {n:"Remerciements Post-Entretien",d:"Motivation et remerciements accueil",occ:6,lvl:"m"},
+    {n:"Avantages du Métier (Orientation)",d:"Écrire à des professeurs/élèves",occ:5,lvl:"l"},
+    {n:"Emploi Temporaire d'Été",d:"Tâches et apprentissages des vacances",occ:4,lvl:"l"},
+  ]},
+  {name:"Éducation et Vie Universitaire", color:"#D85A30", items:[
+    {n:"Informations sur une École de Langues",d:"Cours de français, prix et localisation",occ:10,lvl:"m"},
+    {n:"Environnement Universitaire",d:"Professeurs et atmosphère du campus",occ:8,lvl:"m"},
+    {n:"Partenaires Linguistiques",d:"Plateforme pour pratiquer la langue",occ:4,lvl:"l"},
+  ]},
+  {name:"Vie Pratique et Transactions", color:"#888780", items:[
+    {n:"Vente de Vélo (Annonce)",d:"Prix, état et rendez-vous pour essai",occ:15,lvl:"h"},
+    {n:"Instructions pour Cédric (Maison/Jardin)",d:"Tâches ménagères pendant une absence",occ:11,lvl:"h"},
+    {n:"Informations sur les Transports Locaux",d:"Passes, tarifs et trajets",occ:9,lvl:"m"},
+    {n:"Réclamation SAC (Objet Cassé)",d:"Dommage commande en ligne + solution",occ:5,lvl:"l"},
+    {n:"Partager une Recette",d:"Expliquer la préparation d'un plat",occ:2,lvl:"l"},
+  ]},
+];
+
+// ─── T2 DATA ─────────────────────────────────────────────────────────────────
+
+const t2Templates = [
+  {
+    num:1, bg:"#E1F5EE", fg:"#0F6E56",
+    name:"Récit d'Expérience",
+    sub:"Blog ou forum — narrer + opinion (template le plus fréquent)",
+    freq:"Fête des voisins (14) + Festivals (12) + Premier emploi (12) occ.",
+    steps:[
+      "Phrase d'accroche situationnelle — contextualiser sans copier la consigne",
+      "Narration au passé composé : les faits principaux dans l'ordre chronologique",
+      "Développement à l'imparfait : l'ambiance, les impressions continues",
+      "Opinion personnelle avec connecteur fort (À mon sens / Il me semble que...)",
+      "Conclusion ouverte : recommandation ou invitation à réagir"
+    ],
+    phrases:[
+      {role:"Accroche", text:"Permettez-moi de vous faire part d'une expérience qui m'a profondément marqué(e)..."},
+      {role:"Accroche", text:"J'ai eu la chance de participer à [ÉVÉNEMENT] et je souhaitais partager mes impressions avec vous."},
+      {role:"Narration PC", text:"L'événement a débuté / s'est tenu le [DATE]. Dès mon arrivée, j'ai été frappé(e) par [IMPRESSION]."},
+      {role:"Ambiance IMP", text:"L'atmosphère était [adjectif] : [DESCRIPTION]. On entendait / sentait / voyait [DÉTAILS SENSORIELS]."},
+      {role:"Point fort", text:"Ce qui m'a particulièrement touché(e), c'est [ÉLÉMENT], que je n'avais jamais vécu auparavant."},
+      {role:"Opinion", text:"À mon sens, ce type d'initiative/événement mérite d'être encouragé car il permet de [BÉNÉFICE]."},
+      {role:"Clôture", text:"Je vous encourage vivement à [RECOMMANDATION] — vous ne le regretterez pas !"}
+    ],
+    example:{
+      title:"Exemple — Fête des voisins (blog)",
+      text:"Permettez-moi de vous raconter une soirée qui restera longtemps gravée dans ma mémoire. Le 31 mai dernier, j'ai assisté à la fête des voisins organisée dans notre résidence, et l'expérience a largement dépassé mes attentes.\n\nDès mon arrivée, j'ai été accueilli(e) chaleureusement par des voisins que je ne connaissais jusque-là que de vue. L'ambiance était festive et détendue : il y avait de la musique douce, des plats du monde entier et beaucoup de rires. Les enfants couraient librement pendant que les adultes échangeaient autour d'un verre.\n\nÀ mon sens, ce genre d'initiative est indispensable dans nos villes modernes où l'individualisme prend souvent le dessus. Je vous encourage vivement à y participer l'an prochain — vous ne le regretterez pas !",
+      words:133
+    },
+    tags:["Fête des voisins (14 occ.)","Festivals & concerts (12 occ.)","Premier emploi (12 occ.)","Salon du Livre (8 occ.)"]
+  },
+  {
+    num:2, bg:"#E6F1FB", fg:"#185FA5",
+    name:"Conseil & Témoignage",
+    sub:"Forum — partager une expérience pour influencer (le plus fréquent T2)",
+    freq:"Études à l'étranger (19 occ.) + Campagne (15 occ.) + Français (10 occ.)",
+    steps:[
+      "Empathie directe avec l'interlocuteur qui a posé la question",
+      "Annonce de votre propre expérience analogue (crédibilité)",
+      "Récit factuel + émotionnel de cette expérience (PC + IMP)",
+      "Arguments pratiques et concrets en faveur de la décision",
+      "Concession honnête sur les difficultés + dépassement",
+      "Encouragement final fort et personnalisé"
+    ],
+    phrases:[
+      {role:"Empathie", text:"Je comprends parfaitement vos hésitations, car je me trouvais dans la même situation il y a [DURÉE]."},
+      {role:"Expérience", text:"Ayant moi-même [VÉCU L'EXPÉRIENCE], je peux vous assurer que cette décision a changé ma vie."},
+      {role:"Bénéfice 1", text:"Sur le plan [ASPECT 1], j'ai rapidement constaté que [BÉNÉFICE CONCRET]."},
+      {role:"Bénéfice 2", text:"Par ailleurs, cette expérience m'a permis de [DÉVELOPPEMENT PERSONNEL], ce que je n'aurais jamais imaginé."},
+      {role:"Concession", text:"Certes, les premières semaines ont été difficiles — [DIFFICULTÉ HONNÊTE] — mais cette phase s'est révélée passagère."},
+      {role:"Encouragement", text:"Ne laissez pas la peur vous freiner : vous disposez de toutes les qualités pour [RÉUSSIR]. Lancez-vous !"}
+    ],
+    example:{
+      title:"Exemple — Conseiller Julie sur études à l'étranger",
+      text:"Chère Julie,\n\nJe comprends parfaitement tes hésitations, car je me trouvais dans la même situation il y a trois ans. Laisse-moi te partager mon expérience.\n\nJ'ai passé un an à Montréal dans le cadre d'un échange universitaire, et cette décision a littéralement transformé ma vie. Sur le plan académique, j'ai rapidement constaté que les cours étaient stimulants et les professeurs très accessibles. Par ailleurs, cette immersion m'a permis de gagner en autonomie et en confiance, des qualités précieuses pour la vie professionnelle.\n\nCertes, les premières semaines ont été déstabilisantes — la langue, les codes culturels, la distance avec la famille. Mais cette phase est passagère, je t'en assure.\n\nNe laisse pas la peur te freiner : tu as toutes les qualités pour réussir. Fonce !",
+      words:140
+    },
+    tags:["Études à l'étranger (19 occ.)","Déménagement campagne (15 occ.)","Apprentissage français (10 occ.)","Habitudes alimentaires (8 occ.)"]
+  },
+  {
+    num:3, bg:"#FAECE7", fg:"#993C1D",
+    name:"Réclamation Formelle",
+    sub:"Email d'insatisfaction — ton sérieux et argumenté",
+    freq:"Agence de voyages (11 occ.)",
+    steps:[
+      "Objet clair dès le début + référence précise (numéro, date, destination)",
+      "Rappel des engagements contractuels (ce qui avait été promis)",
+      "Description ordonnée et factuelle de chaque manquement",
+      "Impact concret sur votre séjour/expérience (éviter le dramatisme)",
+      "Demande précise et délai raisonnable",
+      "Ton professionnel maintenu jusqu'à la clôture"
+    ],
+    phrases:[
+      {role:"Objet/Référence", text:"Je me permets de vous adresser ce courriel suite à mon voyage organisé par votre agence du [DATE] au [DATE] (réf. n°[XXXXX])."},
+      {role:"Rappel promesse", text:"Lors de la réservation, il avait été expressément convenu que [PRESTATION PROMISE]."},
+      {role:"Problème 1", text:"Or, à notre arrivée, nous avons constaté que [PROBLÈME 1], ce qui est en totale contradiction avec le descriptif du voyage."},
+      {role:"Problème 2", text:"De surcroît, [PROBLÈME 2], situation qui nous a causé un préjudice important en termes de [IMPACT]."},
+      {role:"Demande", text:"Au vu de ces manquements, je vous demande de bien vouloir nous accorder un remboursement partiel de [MONTANT] ou, à défaut, un avoir équivalent."},
+      {role:"Clôture", text:"Dans l'attente de votre réponse sous 15 jours, je reste à votre disposition et vous adresse mes cordiales salutations."}
+    ],
+    example:{
+      title:"Exemple — Réclamation à l'agence de voyages",
+      text:"Madame, Monsieur,\n\nJe me permets de vous adresser ce courriel suite à notre voyage en Andalousie organisé par votre agence du 12 au 19 juillet dernier (réf. n°78954).\n\nLors de la réservation, il avait été expressément prévu un hôtel 4 étoiles avec vue sur mer et transferts inclus. Or, à notre arrivée, nous avons été installés dans un établissement de 3 étoiles, situé à plusieurs kilomètres de la côte. De surcroît, aucun transfert n'a été organisé depuis l'aéroport, nous contraignant à prendre un taxi à nos frais.\n\nCes manquements ont considérablement impacté la qualité de notre séjour. Je vous demande donc de bien vouloir nous accorder un remboursement partiel de 300 € par personne.\n\nDans l'attente de votre réponse sous 15 jours, veuillez agréer mes salutations distinguées.",
+      words:143
+    },
+    tags:["Réclamation agence voyages (11 occ.)","Services mal organisés"]
+  },
+  {
+    num:4, bg:"#FAEEDA", fg:"#854F0B",
+    name:"Proposition Administrative",
+    sub:"Message à la direction — communication ascendante et structurée",
+    freq:"Suggestion fête d'entreprise (11 occ.)",
+    steps:[
+      "Rappel du contexte et de la mission confiée (légitimer la prise de parole)",
+      "Annonce claire de la solution trouvée (une seule proposition, bien argumentée)",
+      "Description technique : lieu, capacité, équipements, accessibilité",
+      "Argumentation financière : tarifs, rapport qualité/prix, services inclus",
+      "Avantages supplémentaires qui font la différence",
+      "Mise à disposition pour questions + clôture professionnelle"
+    ],
+    phrases:[
+      {role:"Contexte", text:"Suite à votre demande concernant l'organisation de [ÉVÉNEMENT], j'ai procédé à des recherches approfondies et j'ai le plaisir de vous soumettre une proposition."},
+      {role:"Solution", text:"Il me semble que [NOM DU LIEU] constitue l'option la plus adaptée à nos besoins."},
+      {role:"Description", text:"Situé(e) [LOCALISATION], cet établissement dispose d'une capacité d'accueil de [NB] personnes et offre [ÉQUIPEMENTS]."},
+      {role:"Tarif", text:"Le tarif proposé est de [PRIX] par personne, prestations de restauration et sonorisation incluses, ce qui s'inscrit parfaitement dans notre budget."},
+      {role:"Avantage +", text:"Par ailleurs, [AVANTAGE SUPPLÉMENTAIRE : parking, accessibilité, flexibilité horaire...], ce qui constitue un atout non négligeable."},
+      {role:"Clôture", text:"Je reste naturellement disponible pour tout complément d'information et me tiens à votre disposition pour organiser une visite des lieux si vous le souhaitez."}
+    ],
+    example:{
+      title:"Exemple — Suggestion salle pour fête d'entreprise",
+      text:"Madame la Directrice,\n\nSuite à votre demande de trouver un lieu adapté pour notre fête de fin d'année, j'ai effectué plusieurs recherches et j'ai le plaisir de vous soumettre une proposition que je crois très pertinente.\n\nLe Domaine des Pins, situé à 15 minutes du siège social, me semble correspondre parfaitement à nos attentes. L'établissement dispose d'une grande salle pouvant accueillir jusqu'à 120 personnes, d'un système audio-visuel complet et d'un espace extérieur pour l'apéritif.\n\nLe tarif est de 65 € par personne, repas et animations inclus, ce qui reste dans notre enveloppe budgétaire. Un parking gratuit de 80 places est également disponible, facilitant l'accès pour l'ensemble du personnel.\n\nJe reste à votre disposition pour organiser une visite. Cordialement,",
+      words:139
+    },
+    tags:["Suggestion fête entreprise (11 occ.)","Communication ascendante"]
+  },
+  {
+    num:5, bg:"#FBEAF0", fg:"#993556",
+    name:"Profil & Concours",
+    sub:"Article d'opinion — personnalité, concours, souvenir remarquable",
+    freq:"Concours Mon Artiste Préféré (15 occ.) + Admiration (4 occ.)",
+    steps:[
+      "Accroche percutante : phrase qui capte immédiatement l'attention",
+      "Présentation de la personnalité/objet avec des données précises",
+      "Récit de ses actions, œuvres ou impact — avec des exemples concrets",
+      "Dimension personnelle : pourquoi cette personne/chose vous touche particulièrement",
+      "Justification du choix pour le concours / invitation à découvrir",
+      "Conclusion forte et mémorable"
+    ],
+    phrases:[
+      {role:"Accroche", text:"S'il est une personnalité qui ne cesse de m'inspirer depuis des années, c'est bien [NOM]."},
+      {role:"Présentation", text:"[NOM] est [PROFESSION/DESCRIPTION], né(e) en [ANNÉE] à [LIEU]. En [DURÉE] de carrière, il/elle a [ACCOMPLISSEMENT MAJEUR]."},
+      {role:"Œuvre/Action", text:"Son œuvre la plus emblématique demeure [TITRE/ACTION], qui a [IMPACT CONCRET] et touché des millions de personnes à travers le monde."},
+      {role:"Dimension perso", text:"Ce qui me touche profondément chez [NOM], c'est sa capacité à [QUALITÉ], même face à [DIFFICULTÉ]."},
+      {role:"Justification", text:"C'est précisément pour toutes ces raisons que je présente sa candidature / que je vous encourage à découvrir son univers."},
+      {role:"Clôture", text:"[NOM] incarne à mes yeux tout ce que [LE DOMAINE / L'ART / LA SOCIÉTÉ] devrait valoriser davantage."}
+    ],
+    example:{
+      title:"Exemple — Concours Mon Artiste Préféré",
+      text:"S'il est une artiste qui ne cesse de me fasciner depuis mon adolescence, c'est bien Angèle, chanteuse et compositrice belge.\n\nNée en 1995 à Bruxelles, Angèle a conquis le monde francophone avec son premier album « Brol » sorti en 2018, certifié platine dans six pays. Ses textes, à la fois poétiques et incisifs, abordent des thèmes essentiels comme le féminisme, la santé mentale et les réseaux sociaux.\n\nCe qui me touche profondément chez elle, c'est sa capacité à traiter des sujets graves avec une légèreté déconcertante, sans jamais sacrifier la profondeur du propos. Son engagement sincère pour les causes qui lui tiennent à cœur la rend authentique et accessible.\n\nAngèle incarne selon moi tout ce que la musique contemporaine devrait valoriser : talent, courage et sincérité.",
+      words:139
+    },
+    tags:["Concours Mon Artiste Préféré (15 occ.)","Admiration personnalité (4 occ.)","Meilleur souvenir voyage (4 occ.)"]
+  }
+];
+
+const t2Consignes = [
+  {cat:"Éducation & Expérience Internationale", color:"#1D9E75", items:[
+    {label:"Études à l'étranger (Julie/Justine)",text:"Une étudiante qui a 19 ans veut aller à l'étranger pour les études. Elle demande aux internautes du forum de partager leurs expériences... Parlez-lui de votre expérience (décrire le séjour à l'étranger, les activités…)."},
+    {label:"Première semaine à l'université (Montréal)",text:"Vous venez de commencer les cours à l'université à Montréal. Écrivez un message à votre ami pour lui raconter votre première semaine à l'université."},
+    {label:"Expérience universitaire à l'étranger",text:"Rédigez un article destiné à un blog dans lequel vous relatez votre expérience universitaire à l'étranger."},
+    {label:"Accueil d'un étudiant étranger",text:"Vous avez accueilli un étudiant étranger pendant une semaine chez vous. Sur votre blog, vous écrivez un article pour raconter cette semaine. Vous expliquez pourquoi vous avez aimé cette expérience."},
+    {label:"Première semaine en école de langues",text:"Vous avez récemment entamé des cours dans une école de langues. Rédigez un message à vos amis pour leur parler de votre première semaine et partager vos impressions sur les cours, les enseignants et l'atmosphère."}
+  ]},
+  {cat:"Style de Vie & Environnement", color:"#185FA5", items:[
+    {label:"Déménagement ville → campagne",text:"Sur votre blog, expliquez les raisons qui vous ont poussé à quitter la ville pour vous installer à la campagne. Présentez les avantages de votre nouvelle vie rurale."},
+    {label:"Semaine sans voiture",text:"Vous avez assisté à un événement intitulé 'Une semaine sans voiture'. Racontez dans un blog l'expérience que vous avez vécue et donnez votre impression sur cette initiative."},
+    {label:"Changement alimentaire",text:"Rédigez un article sur un forum pour expliquer les raisons qui vous ont poussé à modifier votre manière de vous alimenter."},
+    {label:"Soirée écologique",text:"Vous avez assisté à une soirée écologique pour protéger la planète qui avait lieu dans votre université. Racontez-là dans votre blog et expliquez pourquoi vous l'avez aimée."},
+    {label:"Ville vs. campagne (comparatif)",text:"Vous habitez en ville ou à la campagne. Sur votre blog, partagez votre expérience et comparez les points positifs et négatifs, en donnant votre avis personnel."}
+  ]},
+  {cat:"Événements Sociaux & Culturels", color:"#BA7517", items:[
+    {label:"Fête des voisins",text:"Vous avez assisté à une fête entre voisins dans votre quartier. Dans votre blog décrivez cet évènement et racontez pourquoi vous l'avez aimé."},
+    {label:"Salon du livre",text:"Écrivez un message à vos amis pour leur raconter votre expérience lors d'un salon du livre (conférence, expositions et rencontre avec les auteurs…)."},
+    {label:"Concert de votre artiste favori",text:"Vous venez d'assister au concert de votre artiste favori. Vous écrivez un article sur votre blog personnel, pour partager cette expérience et inciter vos amis et les autres à assister à son prochain concert."},
+    {label:"Fête en famille",text:"Vous avez été invité(e) à une fête en famille. Vous envoyez un message à vos amis pour raconter cette fête. Vous expliquez ce que vous avez le plus aimé."},
+    {label:"Fête traditionnelle",text:"Vous avez assisté à une fête traditionnelle dans votre pays ou à l'étranger. Racontez-la dans votre blog et dites pourquoi vous l'avez aimée."}
+  ]},
+  {cat:"Communication Institutionnelle & Réclamations", color:"#534AB7", items:[
+    {label:"Réclamation agence de voyage",text:"Vous faites une réclamation par rapport aux mauvaises prestations d'une agence de voyage suite à un voyage mal organisé. Exprimez votre mécontentement."},
+    {label:"Suggestion salle fête d'entreprise",text:"Votre direction est à la recherche d'une salle pour la fête de fin d'année, capable d'accueillir 100 invités. Rédigez un message à la direction pour leur dire que vous avez trouvé un local idéal (lieu, tarifs et services etc.)."},
+    {label:"Journée d'accueil nouveaux étudiants",text:"Votre établissement vous a confié la mission d'organiser une journée d'accueil pour les nouveaux étudiants francophones. Écrivez un courriel à leur intention en précisant toutes les informations utiles..."},
+    {label:"Pique-nique de l'entreprise",text:"Rédigez un article pour le journal de l'entreprise sur un pique-nique entre collègues."},
+    {label:"Présenter son métier à des élèves",text:"Les professeurs de l'école de votre quartier souhaitent présenter différents métiers aux élèves... Vous leur écrivez. Vous décrivez votre profession et expliquez pourquoi vous trouvez votre métier intéressant."}
+  ]},
+  {cat:"Travail, Carrière & Bénévolat", color:"#639922", items:[
+    {label:"Formation en entreprise",text:"Vous avez passé une journée de formation dans votre entreprise. Dans un forum, rédigez un article à vos collègues pour leur raconter cette journée et ce qui vous a plu."},
+    {label:"Job d'été",text:"Écrivez un message à vos amis pour leur partager votre expérience de travail temporaire effectué durant les vacances d'été."},
+    {label:"Travail à l'étranger",text:"Vous travaillez désormais à l'étranger. Écrivez à vos amis pour leur parler de cette nouvelle expérience professionnelle et de ce que vous avez particulièrement apprécié."},
+    {label:"Premier jour dans un nouvel emploi",text:"Vous avez commencé un nouvel emploi. Vous envoyez un courriel à vos proches pour leur raconter votre première semaine (entreprise, poste, missions, etc.)."},
+    {label:"Bénévolat avec les personnes âgées",text:"Vous travaillez dans une association qui aide les personnes âgées. Rédigez un article de blog pour raconter vos expériences et convaincre d'autres personnes de rejoindre l'association."}
+  ]},
+  {cat:"Opinion, Débats & Concours", color:"#D85A30", items:[
+    {label:"Concours Mon Artiste Préféré",text:"Rédigez un article de blog sur votre artiste préféré dans le cadre d'un concours dont le thème est « Mon artiste préféré », permettant de gagner un séjour..."},
+    {label:"Tout quitter pour voyager un an",text:"Participez à la discussion sur le site 'voyage.internaute.fr' en répondant à la question : est-ce une bonne ou une mauvaise idée de tout quitter pour voyager pendant un an ?"},
+    {label:"Admiration pour une personnalité",text:"Exprimez votre admiration pour une personnalité, célèbre ou non, en vous appuyant sur ses actions spécifiques. Rédigez un article de blog en détaillant ses actions et expliquez pourquoi vous l'aimez."},
+    {label:"Décision radicale de vie (Paul & Naïma)",text:"Tout quitter pour changer de vie ? Paul a quitté son poste de banquier à Paris et a ouvert une boulangerie à Calgary ! Donnez votre opinion sur le choix de Paul et de Naïma."},
+    {label:"Télévision dans la chambre",text:"Que pensez-vous de l'installation d'une télévision dans la chambre ? Partagez votre avis dans un article de blog."}
+  ]},
+  {cat:"Vie Pratique & Transactions Sociales", color:"#888780", items:[
+    {label:"Brocante / Marché de l'occasion",text:"Vous avez participé à une brocante (achat / vente de produits d'occasion) dans votre ville. Sur votre blog personnel, racontez pourquoi vous avez aimé cette activité."},
+    {label:"Apprentissage des langues",text:"Sur votre blog, partagez votre expérience d'apprentissage d'une langue étrangère. Rédigez un message sur un forum internet en racontant votre parcours et les défis rencontrés."},
+    {label:"Compétition culinaire",text:"Vous avez pris part à une compétition culinaire. Sur votre site web, vous rédigez un petit article pour décrire le déroulement de la journée. Vous précisez les raisons pour lesquelles cette expérience vous a plu ou non."},
+    {label:"Souvenir de voyage",text:"Rédigez un article de blog sur votre souvenir de voyage que vous avez aimé le plus."},
+    {label:"Formations en ligne",text:"Rédigez un message décrivant une expérience avec les formations en ligne, en mettant en avant les points positifs et les éventuels défis rencontrés."}
+  ]}
+];
+
+const t2Cats = [
+  {name:"Éducation et Expérience Internationale", color:"#1D9E75", items:[
+    {n:"Conseiller un étudiant sur les études à l'étranger",d:"Julie, Alice ou Justine — peurs et bénéfices",occ:19,lvl:"h"},
+    {n:"Apprentissage d'une langue étrangère",d:"Parcours, défis et stratégies en français",occ:10,lvl:"m"},
+    {n:"Première semaine à l'université (Montréal)",d:"Impressions sur les cours et le campus",occ:4,lvl:"l"},
+    {n:"Accueil d'un étudiant étranger",d:"Semaine avec un échangiste à la maison",occ:4,lvl:"l"},
+  ]},
+  {name:"Style de Vie et Environnement", color:"#185FA5", items:[
+    {n:"Déménagement ville → campagne",d:"Raisons du changement et vie rurale",occ:15,lvl:"h"},
+    {n:"Semaine sans voiture",d:"Participation et opinion sur l'impact",occ:11,lvl:"h"},
+    {n:"Changement d'habitudes alimentaires",d:"Raisons pour modifier son alimentation",occ:8,lvl:"m"},
+    {n:"Arrêt des réseaux sociaux",d:"Instagram ou Facebook — expérience de sevrage",occ:3,lvl:"l"},
+    {n:"Soirée écologique à l'université",d:"Événement de protection de la planète",occ:3,lvl:"l"},
+  ]},
+  {name:"Événements Sociaux et Récits Culturels", color:"#BA7517", items:[
+    {n:"Fête des Voisins",d:"Rencontre dans le quartier et intégration sociale",occ:14,lvl:"h"},
+    {n:"Festivals et Concerts",d:"Expériences positives ou déceptions",occ:12,lvl:"h"},
+    {n:"Visite au Salon du Livre",d:"Auteurs, expositions et conférences",occ:8,lvl:"m"},
+    {n:"Fêtes familiales ou traditionnelles",d:"Célébrations marquantes",occ:7,lvl:"m"},
+    {n:"Journée à l'École de Musique",d:"Portes ouvertes avec cours gratuits",occ:5,lvl:"l"},
+    {n:"Événement marquant (anniversaire, mariage)",d:"Ce qui a le plus impressionné",occ:4,lvl:"l"},
+  ]},
+  {name:"Travail, Carrière et Bénévolat", color:"#639922", items:[
+    {n:"Première semaine dans le nouvel emploi",d:"Poste, collègues et accueil",occ:12,lvl:"h"},
+    {n:"Bénévolat et Engagement Social",d:"Aide aux personnes âgées, enfants ou environnement",occ:8,lvl:"m"},
+    {n:"Formation en entreprise",d:"Journée de formation et points positifs",occ:5,lvl:"l"},
+    {n:"Job d'été",d:"Tâches et apprentissages des vacances",occ:3,lvl:"l"},
+  ]},
+  {name:"Communication et Réclamations", color:"#534AB7", items:[
+    {n:"Réclamation à l'agence de voyages",d:"Insatisfaction pour services mal organisés",occ:11,lvl:"h"},
+    {n:"Suggestion de lieu pour fête d'entreprise",d:"Proposition à la direction avec tarifs",occ:11,lvl:"h"},
+  ]},
+  {name:"Opinion, Débats et Concours", color:"#D85A30", items:[
+    {n:"Concours Mon Artiste Préféré",d:"Vie et œuvre d'un idole — gagner un voyage",occ:15,lvl:"h"},
+    {n:"Tout quitter pour voyager un an ?",d:"Opinion basée sur expérience personnelle",occ:5,lvl:"l"},
+    {n:"Admiration pour une personnalité",d:"Actions marquantes d'une personne inspirante",occ:4,lvl:"l"},
+    {n:"Témoignage sur la colocation",d:"Opinion sur ce mode de vie adulte",occ:2,lvl:"l"},
+    {n:"Décision Naïma/Paul (boulangerie Calgary)",d:"Opiner sur un changement radical de vie",occ:2,lvl:"l"},
+  ]},
+  {name:"Vie Pratique et Transactions Sociales", color:"#888780", items:[
+    {n:"Brocante / Marché de l'occasion",d:"Achat/vente et pourquoi on a aimé",occ:10,lvl:"m"},
+    {n:"Concours culinaire",d:"Journée de compétition et ressenti",occ:5,lvl:"l"},
+    {n:"Formations et cours en ligne",d:"Points positifs et défis de la modalité",occ:5,lvl:"l"},
+    {n:"Meilleur souvenir de voyage",d:"Description détaillée du souvenir préféré",occ:4,lvl:"l"},
+  ]},
+];
+
+// ─── T3 DATA ─────────────────────────────────────────────────────────────────
+
+const t3Templates = [
+  {
+    num:1, bg:"#E1F5EE", fg:"#0F6E56",
+    name:"Dilème Social et Éthique",
+    sub:"Liberté individuelle vs. sécurité ou égalité — Règles et Droits",
+    freq:"Caméras (19 occ.) + Uniforme (17 occ.) + Autorité parentale (14 occ.)",
+    steps:[
+      "SYNTHÈSE (40-90 mots) — Coquille fixe : présenter les 2 documents sans opinion",
+      "OPINION — Reconnaître la légitimité de la restriction/règle imposée",
+      "Argument 1 : bénéfice collectif concret de la règle (sécurité, ordre, égalité)",
+      "Argument 2 : risque réel pour la liberté individuelle (concession honnête)",
+      "Dépassement de la concession — pourquoi le bénéfice l'emporte",
+      "Conclusion nuancée avec connecteur fort (Néanmoins / Il demeure que...)"
+    ],
+    phrases:[
+      {role:"Synthèse (fixe)", text:"Le premier document met en avant [ARGUMENT DOC 1], tandis que le second souligne [ARGUMENT DOC 2]. Ces deux textes s'opposent sur la question de [THÈME CENTRAL] : d'un côté [POSITION 1], de l'autre [POSITION 2]."},
+      {role:"Amorce opinion", text:"À titre personnel, je considère que [POSITION] mérite une attention particulière, même si la question ne souffre pas de réponse simple."},
+      {role:"Argument 1", text:"En premier lieu, force est de constater que [MESURE] contribue effectivement à [BÉNÉFICE COLLECTIF], comme en témoignent [EXEMPLE OU STATISTIQUE]."},
+      {role:"Concession", text:"Certes, on pourrait objecter que cette approche porte atteinte à [LIBERTÉ / DROIT], et cette préoccupation n'est pas sans fondement."},
+      {role:"Dépassement", text:"Toutefois, il convient de relativiser cette critique : [ARGUMENT QUI DÉPASSE LA CONCESSION]."},
+      {role:"Conclusion", text:"Il demeure que [SYNTHÈSE DE POSITION], à condition que [NUANCE OU CONDITION]. C'est pourquoi je soutiens [POSITION FINALE]."}
+    ],
+    example:{
+      title:"Exemple — Caméras de surveillance à l'école",
+      text:"SYNTHÈSE : Le premier document met en avant les bénéfices des caméras de surveillance en milieu scolaire en termes de sécurité et de dissuasion face aux actes de violence. Le second texte souligne, quant à lui, les risques pour la vie privée des élèves et le climat de défiance que ces dispositifs peuvent engendrer. Ces deux documents s'opposent sur la question du juste équilibre entre protection collective et respect de l'individu.\n\nOPINION : À titre personnel, je considère que l'installation de caméras dans les établissements scolaires se justifie, à condition qu'elle soit encadrée. Force est de constater que dans de nombreux pays, ces dispositifs ont contribué à réduire significativement les incidents graves. Certes, on pourrait objecter que cette surveillance permanente nuit au sentiment de liberté des élèves. Toutefois, il convient de rappeler que ces caméras ne filment que les espaces communs — jamais les salles de classe — et que leur accès est strictement réglementé. Il demeure qu'une telle mesure doit s'accompagner d'un dialogue transparent avec la communauté éducative. C'est pourquoi je la soutiens, avec ces garanties.",
+      words:164
+    },
+    tags:["Caméras de surveillance (19 occ.)","Uniforme scolaire (17 occ.)","Autorité parentale (14 occ.)","Photo au CV (7 occ.)"]
+  },
+  {
+    num:2, bg:"#E6F1FB", fg:"#185FA5",
+    name:"Modernité vs. Tradition",
+    sub:"Impact des innovations sur comportements humains et consommation",
+    freq:"Jeux vidéo (32 occ.) + Colocation (26 occ.) + Supermarchés (21 occ.)",
+    steps:[
+      "SYNTHÈSE (40-90 mots) — Coquille fixe neutre",
+      "OPINION — Reconnaître l'apport concret de la modernité (crédibilité)",
+      "Argument 1 : bénéfice pratique ou économique de la nouveauté",
+      "Argument 2 : perte ou risque lié à l'abandon de la tradition",
+      "Nuance : la coexistence est possible (position équilibrée)",
+      "Conclusion : proposer un modèle intermédiaire ou une condition"
+    ],
+    phrases:[
+      {role:"Synthèse (fixe)", text:"Le premier document met en avant [AVANTAGES MODERNITÉ], tandis que le second souligne [PERTES LIÉES À LA TRADITION]. Ces deux textes s'opposent sur la question de [THÈME] : faut-il privilégier [OPTION A] au détriment de [OPTION B] ?"},
+      {role:"Amorce opinion", text:"Il serait réducteur de trancher cette question de manière binaire. À mon sens, [NUANCE INITIALE]."},
+      {role:"Argument moderne", text:"Il est indéniable que [INNOVATION] offre des avantages concrets : [BÉNÉFICE 1] et [BÉNÉFICE 2], notamment pour les personnes [PUBLIC CIBLE]."},
+      {role:"Concession trad.", text:"Néanmoins, il serait naïf de nier que cette évolution s'accompagne d'une perte : [CE QUE LA TRADITION APPORTAIT]."},
+      {role:"Coexistence", text:"Ces deux approches ne sont pas nécessairement exclusives : on peut très bien [COMBINER LES DEUX], comme le font déjà [EXEMPLE]."},
+      {role:"Conclusion", text:"En définitive, la question n'est pas de choisir entre [A] et [B], mais de trouver le juste équilibre qui préserve [VALEUR ESSENTIELLE] tout en tirant profit de [APPORT DE LA MODERNITÉ]."}
+    ],
+    example:{
+      title:"Exemple — Jeux vidéo (Bienfaits vs. Addiction)",
+      text:"SYNTHÈSE : Le premier document valorise les bénéfices cognitifs des jeux vidéo, soulignant leur capacité à développer les réflexes, la résolution de problèmes et l'esprit d'équipe. Le second texte pointe les risques d'addiction, d'isolement social et d'effets négatifs sur les comportements. Ces deux textes s'opposent sur la valeur réelle des jeux vidéo dans notre société.\n\nOPINION : Il serait réducteur de condamner ou d'encenser les jeux vidéo sans nuance. Il est indéniable que certains titres stimulent la créativité, la coopération et la réactivité — des qualités reconnues par les neurosciences. Néanmoins, il serait naïf de nier que la pratique excessive, sans encadrement, peut entraîner une dépendance réelle chez les profils vulnérables. Ces deux réalités ne sont pas contradictoires : on peut très bien encadrer la pratique par des règles claires de temps et de contenu. En définitive, la question n'est pas d'interdire les jeux vidéo, mais d'apprendre à les utiliser de manière réfléchie et équilibrée.",
+      words:152
+    },
+    tags:["Jeux vidéo (32 occ.)","Colocation adultes (26 occ.)","Supermarchés vs. local (21 occ.)","Vols low-cost (20 occ.)","Livre papier vs. numérique (11 occ.)"]
+  },
+  {
+    num:3, bg:"#FAEEDA", fg:"#854F0B",
+    name:"Gestion Publique & Environnement",
+    sub:"Bien commun vs. praticité quotidienne — Espace urbain et ressources",
+    freq:"Villes sans voitures (29 occ.) + Fast food (23 occ.) + Plastique (12 occ.)",
+    steps:[
+      "SYNTHÈSE (40-90 mots) — Coquille fixe neutre",
+      "OPINION — Situer l'enjeu dans son contexte global (urgence ou importance)",
+      "Argument 1 : bénéfice collectif à long terme (santé, environnement, équité)",
+      "Argument 2 : difficultés réelles d'implémentation pour les citoyens",
+      "Réponse aux objections — des solutions existent",
+      "Conclusion en entonnoir : du global au local"
+    ],
+    phrases:[
+      {role:"Synthèse (fixe)", text:"Le premier document met en avant [BÉNÉFICE DE LA MESURE], tandis que le second souligne [DIFFICULTÉS PRATIQUES]. Ces deux textes s'opposent sur la question de savoir si [MESURE] est réaliste et souhaitable dans notre contexte actuel."},
+      {role:"Contexte global", text:"À l'heure où [ENJEU GLOBAL : crise climatique, problème de santé publique...], il est difficile de nier l'urgence d'agir sur [THÈME]."},
+      {role:"Argument collectif", text:"D'une part, [MESURE] présente des avantages indéniables pour la collectivité : [BÉNÉFICE 1] et [BÉNÉFICE 2], comme l'illustrent les exemples de [VILLE/PAYS]."},
+      {role:"Difficultés", text:"D'autre part, il serait malhonnête d'ignorer les contraintes pratiques que cela impose : [DIFFICULTÉ 1], notamment pour [POPULATION CONCERNÉE]."},
+      {role:"Solutions", text:"Cela dit, ces obstacles ne sont pas insurmontables : des politiques de transition progressives ont déjà prouvé leur efficacité."},
+      {role:"Conclusion", text:"En somme, si [MESURE] implique des efforts à court terme, ses bénéfices à long terme pour la collectivité justifient amplement son adoption, à condition d'accompagner les citoyens dans cette transition."}
+    ],
+    example:{
+      title:"Exemple — Interdiction voitures en centre-ville",
+      text:"SYNTHÈSE : Le premier document défend l'interdiction des voitures en centre-ville en soulignant les bénéfices pour la qualité de l'air et la sécurité des piétons. Le second texte pointe les difficultés pratiques pour les habitants et les commerçants. Ces deux textes débattent de la faisabilité d'une telle mesure dans nos villes actuelles.\n\nOPINION : À l'heure où les villes étouffent sous la pollution, il est difficile de nier l'urgence d'agir. D'une part, les zones piétonnes ont démontré leur efficacité à Oslo, Amsterdam ou Lyon : réduction du CO₂ et revitalisation du commerce de proximité. D'autre part, il serait malhonnête d'ignorer les contraintes réelles pour les habitants périphériques. Ces obstacles ne sont pas insurmontables : des alternatives de transport abordables et une mise en œuvre progressive ont fait leurs preuves. En somme, l'interdiction des voitures me semble inévitable — à condition d'accompagner les citoyens dans cette transition.",
+      words:151
+    },
+    tags:["Villes sans voitures (29 occ.)","Fast food (23 occ.)","Utilisation plastique (12 occ.)","Gratuité transports (9 occ.)","Zoos (10 occ.)"]
+  }
+];
+
+const t3Consignes = [
+  {cat:"Éducation et Développement de l'Enfant", color:"#1D9E75", items:[
+    {label:"Uniforme scolaire",text:"L'uniforme scolaire : sentiment d'appartenance et égalité vs. restriction de la liberté d'expression."},
+    {label:"Devoirs à la maison",text:"Les devoirs à la maison : autonomie et lien école-famille vs. manque d'efficacité et inégalité sociale."},
+    {label:"Autorité parentale",text:"La sévérité des parents envers leurs enfants : discipline nécessaire pour la vie en société vs. risque de freiner l'épanouissement."},
+    {label:"Caméras de surveillance",text:"Les caméras de surveillance à l'école : renforcement de la sécurité vs. atteinte à la vie privée des élèves."},
+    {label:"École privée vs. publique",text:"Faut-il choisir une école privée ou publique ? : réputation et encadrement rigoureux vs. manque de mixité sociale."}
+  ]},
+  {cat:"Technologie et Vie Numérique", color:"#534AB7", items:[
+    {label:"Jeux vidéo",text:"Les jeux vidéo : bienfaits cognitifs (analyse et réaction) vs. risque de dépendance et d'agressivité."},
+    {label:"Objets connectés",text:"Les objets intelligents / connectés : praticité et suivi de santé vs. risques de piratage et perte de vie privée."},
+    {label:"Livre papier ou numérique",text:"Le livre papier ou le livre numérique ? : économie et accessibilité vs. valeur sensorielle et affective du support physique."},
+    {label:"Technologie à l'école",text:"Utilisation des nouvelles technologies dans les écoles : préparation à l'avenir numérique vs. dépendance aux écrans."},
+    {label:"Télévision et éducation",text:"Rôle de la télévision dans l'éducation : transmission de connaissances vs. diffusion de stéréotypes et passivité."}
+  ]},
+  {cat:"Travail et Carrière", color:"#185FA5", items:[
+    {label:"Sieste au travail",text:"La sieste au travail : augmentation de la productivité et du bien-être vs. difficultés logistiques pour l'entreprise."},
+    {label:"Réduction de la journée de travail",text:"Réduction du temps de travail : meilleur équilibre vie privée/professionnelle vs. augmentation de la pression."},
+    {label:"Photo sur le CV",text:"Faut-il mettre une photo sur son CV ? : mémorisation du candidat vs. risque de discrimination et d'injustice."},
+    {label:"Égalité hommes/femmes",text:"Égalité homme/femme au travail : accès aux postes à responsabilité vs. persistance des métiers genrés."},
+    {label:"Rôle du travail",text:"Le rôle du travail : moyen de se définir et d'exister vs. source de fatigue et de contraintes."}
+  ]},
+  {cat:"Environnement et Urbanisme", color:"#639922", items:[
+    {label:"Interdiction des voitures en ville",text:"L'interdiction des voitures en ville : amélioration de la qualité de l'air vs. manque d'infrastructures de transport."},
+    {label:"Gratuité des transports",text:"La gratuité des transports en commun : réduction des bouchons vs. coût élevé pour la collectivité."},
+    {label:"Zoos et parcs zoologiques",text:"Les parcs zoologiques : conservation des espèces en danger vs. vision de 'prison' pour les animaux sauvages."},
+    {label:"Utilisation du plastique",text:"L'utilisation du plastique : indispensable en médecine et alimentation vs. pollution dévastatrice des océans."},
+    {label:"Art urbain",text:"L'art urbain (Street art vs. Graffiti) : démocratisation de la culture vs. vandalisme et coût de nettoyage."}
+  ]},
+  {cat:"Alimentation et Santé Publique", color:"#BA7517", items:[
+    {label:"Fast food et restauration rapide",text:"La restauration rapide : praticité pour les gens pressés vs. dangers pour la santé (obésité et diabète)."},
+    {label:"Consommation de viande",text:"La question de la consommation de viande : source de nutriments essentiels vs. préoccupations éthiques et environnementales."},
+    {label:"Livraison de repas au bureau",text:"Livraison de repas au bureau : gain de temps et efficacité vs. sédentarité et impact écologique du transport."},
+    {label:"Menus sans viande en cantine",text:"Les menus sans viande dans les cantines scolaires : santé des enfants vs. pénalisation des familles modestes."},
+    {label:"Distributeurs dans les lycées",text:"Distributeurs de boissons dans les lycées : commodité pour les élèves vs. incitation au sucre et à l'obésité."}
+  ]},
+  {cat:"Société et Style de Vie", color:"#D85A30", items:[
+    {label:"Colocation entre adultes",text:"Vivre en colocation entre adultes : économies et socialisation vs. conflits de personnalité et manque d'intimité."},
+    {label:"Ville ou campagne",text:"Ville ou campagne : accès aux loisirs et services vs. besoin de nature et de tranquillité."},
+    {label:"Maisons de retraite",text:"Maisons de retraite ou maintien à domicile : soins professionnels et vie sociale vs. sentiment d'abandon."},
+    {label:"Vivre chez ses parents après 18 ans",text:"Vivre chez ses parents après la majorité : confort et économies vs. manque de liberté et d'indépendance."},
+    {label:"Voyage seul vs. accompagné",text:"Le voyage seul vs. le voyage accompagné : introspection et liberté vs. poids moral de la solitude."}
+  ]},
+  {cat:"Consommation et Économie", color:"#888780", items:[
+    {label:"Supermarchés vs. commerce local",text:"Faire ses courses alimentaires : praticité des grandes surfaces vs. qualité des producteurs locaux."},
+    {label:"Vols low-cost",text:"Les vols à bas prix : démocratisation des voyages vs. manque de confort et doutes sur la sécurité."},
+    {label:"Produits faits maison (DIY)",text:"Les produits faits maison : contrôle des ingrédients vs. manque de garantie de sécurité et temps requis."},
+    {label:"Cuisinier amateur ou professionnel",text:"Cuisinier amateur ou professionnel ? : talent autodidacte via internet vs. nécessité de formation technique."},
+    {label:"Musées gratuits",text:"La gratuité des musées : accès universel à la culture vs. baisse des revenus pour l'entretien des œuvres."}
+  ]}
+];
+
+const t3Cats = [
+  {name:"Éducation et Développement de l'Enfant", color:"#1D9E75", items:[
+    {n:"Caméras de Surveillance à l'École",d:"Sécurité vs. Vie privée",occ:19,lvl:"h"},
+    {n:"Uniforme Scolaire",d:"Égalité vs. Liberté d'expression",occ:17,lvl:"h"},
+    {n:"Vêtements de Marque",d:"Intégration sociale vs. Coût",occ:16,lvl:"h"},
+    {n:"Animaux de Compagnie pour Enfants",d:"Responsabilité vs. Coût",occ:15,lvl:"h"},
+    {n:"Autorité et Sévérité Parentale",d:"Discipline vs. Épanouissement",occ:14,lvl:"h"},
+    {n:"Lecture pour les Enfants",d:"Développement cognitif vs. Liberté",occ:13,lvl:"h"},
+    {n:"Écrans et Technologie dans l'Éducation",d:"Préparation numérique vs. Sédentarité",occ:12,lvl:"h"},
+    {n:"Devoirs à la Maison",d:"Autonomie vs. Inégalité sociale",occ:11,lvl:"h"},
+    {n:"Télévision et Éducation",d:"Source de culture vs. Stéréotypes",occ:10,lvl:"m"},
+    {n:"École Privée vs. Publique",d:"Encadrement vs. Mixité sociale",occ:5,lvl:"l"},
+    {n:"Instruction en Famille",d:"Pédagogie individualisée vs. Isolement",occ:5,lvl:"l"},
+  ]},
+  {name:"Technologie et Vie Numérique", color:"#534AB7", items:[
+    {n:"Jeux Vidéo",d:"Bienfaits cognitifs vs. Addiction",occ:32,lvl:"h"},
+    {n:"Objets Connectés",d:"Praticité vs. Sécurité des données",occ:14,lvl:"h"},
+    {n:"Livre Papier vs. Numérique",d:"Accessibilité vs. Valeur sensorielle",occ:11,lvl:"h"},
+    {n:"Apprentissage Langues en Ligne",d:"Flexibilité vs. Manque de motivation",occ:8,lvl:"m"},
+    {n:"Achats en Ligne",d:"Temps et prix vs. Contact humain",occ:5,lvl:"l"},
+  ]},
+  {name:"Travail et Vie Professionnelle", color:"#185FA5", items:[
+    {n:"Valeur et Identité du Travail",d:"Réalisation vs. Source de stress",occ:18,lvl:"h"},
+    {n:"Travail Saisonnier pour Étudiants",d:"Responsabilité vs. Manque de repos",occ:12,lvl:"h"},
+    {n:"Égalité Hommes-Femmes",d:"Parité vs. Persistance des inégalités",occ:9,lvl:"m"},
+    {n:"Amitié au Bureau",d:"Climat positif vs. Conflits d'intérêt",occ:8,lvl:"m"},
+    {n:"Photo sur le CV",d:"Visualisation vs. Discrimination",occ:7,lvl:"m"},
+    {n:"Sieste au Travail",d:"Productivité vs. Logistique difficile",occ:6,lvl:"m"},
+    {n:"Réduction Journée de Travail",d:"Équilibre vs. Pression",occ:5,lvl:"l"},
+    {n:"Diplôme vs. Expérience",d:"Sécurité vs. Talent pratique",occ:3,lvl:"l"},
+    {n:"Animaux au Bureau",d:"Détente vs. Allergies",occ:2,lvl:"l"},
+  ]},
+  {name:"Environnement et Urbanisme", color:"#639922", items:[
+    {n:"Villes sans Voitures",d:"Qualité de l'air vs. Infrastructure",occ:29,lvl:"h"},
+    {n:"Chasse aux Animaux",d:"Tradition vs. Cruauté",occ:14,lvl:"h"},
+    {n:"Utilisation du Plastique",d:"Utilité médicale vs. Pollution",occ:12,lvl:"h"},
+    {n:"Agrandissement des Villes",d:"Modernisation vs. Impact environnemental",occ:11,lvl:"h"},
+    {n:"Zoos et Parcs Zoologiques",d:"Conservation vs. Prison cruelle",occ:10,lvl:"m"},
+    {n:"Gratuité des Transports",d:"Moins de pollution vs. Coût municipal",occ:9,lvl:"m"},
+    {n:"Art Urbain",d:"Culture vs. Vandalisme",occ:9,lvl:"m"},
+  ]},
+  {name:"Société et Style de Vie", color:"#D85A30", items:[
+    {n:"Vie en Colocation (Adultes)",d:"Économie et socialisation vs. Conflits",occ:26,lvl:"h"},
+    {n:"Ville vs. Campagne",d:"Services vs. Tranquillité et nature",occ:10,lvl:"m"},
+    {n:"Maisons de Retraite vs. Famille",d:"Soins spécialisés vs. Abandon",occ:9,lvl:"m"},
+    {n:"Location Courte Durée",d:"Flexibilité vs. Coût élevé",occ:6,lvl:"m"},
+    {n:"Vivre chez ses Parents après 18 ans",d:"Économie vs. Indépendance",occ:5,lvl:"l"},
+  ]},
+  {name:"Alimentation et Santé Publique", color:"#BA7517", items:[
+    {n:"Fast Food et Restauration Rapide",d:"Praticité vs. Obésité",occ:23,lvl:"h"},
+    {n:"Distributeurs dans les Lycées",d:"Commodité vs. Incitation au sucre",occ:15,lvl:"h"},
+    {n:"Livraison de Repas au Travail",d:"Gain de temps vs. Sédentarité",occ:12,lvl:"h"},
+    {n:"Menus sans Viande en Cantine",d:"Santé vs. Pénalisation des producteurs",occ:11,lvl:"h"},
+    {n:"Cuisiniers Amateurs vs. Pros",d:"Talent autodidacte vs. Formation",occ:11,lvl:"h"},
+    {n:"Publicité Alimentaire Enfants",d:"Commerce vs. Manipulation",occ:9,lvl:"m"},
+    {n:"Consommation de Viande vs. Végétarisme",d:"Nutriments vs. Éthique animale",occ:6,lvl:"m"},
+  ]},
+  {name:"Consommation et Économie", color:"#888780", items:[
+    {n:"Supermarchés vs. Commerce Local",d:"Variété et prix vs. Qualité locale",occ:21,lvl:"h"},
+    {n:"Vols Low-cost",d:"Démocratisation vs. Empreinte carbone",occ:20,lvl:"h"},
+    {n:"Produits Fait Maison (DIY)",d:"Contrôle vs. Risque contamination",occ:10,lvl:"m"},
+    {n:"Musées Gratuits",d:"Accès universel vs. Baisse de revenus",occ:9,lvl:"m"},
+  ]},
+];
+
+function occ(lvl){return lvl==='h'?'occ-h':lvl==='m'?'occ-m':'occ-l'}
+
+function renderTemplates(id, data){
+  document.getElementById(id).innerHTML = data.map((t,i)=>`
+    <div class="tpl-card" id="${id}-${i}">
+      <div class="tpl-header" onclick="tog('${id}-${i}')">
+        <div class="tpl-num" style="background:${t.bg};color:${t.fg}">${t.num}</div>
+        <div class="tpl-info">
+          <div class="tpl-name">${t.name}</div>
+          <div class="tpl-sub">${t.sub}</div>
+        </div>
+        <span class="tpl-arrow">&#8964;</span>
+      </div>
+      <div class="tpl-body">
+        <div style="font-size:14px;background:${t.bg};color:${t.fg};padding:5px 10px;border-radius:6px;margin-bottom:12px;font-weight:600">${t.freq}</div>
+        <div class="tpl-section-title">Structure étape par étape</div>
+        <div class="steps">
+          ${t.steps.map((s,si)=>`<div class="step"><div class="step-num" style="background:${t.bg};color:${t.fg}">${si+1}</div><div class="step-text">${s}</div></div>`).join('')}
+        </div>
+        <div class="clb-block">
+          <div class="clb-block-title">Phrases CLB 8 — prêtes à mémoriser</div>
+          <div class="phrase-list">
+            ${t.phrases.map(p=>`<div class="phrase-item"><span class="phrase-role">${p.role}</span><span class="phrase-text">${p.text}</span></div>`).join('')}
+          </div>
+        </div>
+        <div class="tpl-section-title">Scénarios couverts</div>
+        <div class="tag-row">
+          ${t.tags.map(tg=>`<span class="tag" style="background:${t.bg};color:${t.fg}">${tg}</span>`).join('')}
+        </div>
+        <div class="example-box">
+          <div class="example-box-title">${t.example.title}</div>
+          <div class="example-text">${t.example.text.replace(/\n/g,'<br>')}</div>
+          <div class="example-word-count">≈ ${t.example.words} mots</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderConsignes(id, data){
+  document.getElementById(id).innerHTML = `<div class="cat-list">${data.map((cat,ci)=>`
+    <div class="cat-card" id="${id}-${ci}">
+      <div class="cat-header" onclick="tog('${id}-${ci}')">
+        <div class="cat-dot" style="background:${cat.color}"></div>
+        <div class="cat-title">${cat.cat}</div>
+        <span class="cat-count">${cat.items.length} consignes</span>
+        <span class="cat-arrow">&#8964;</span>
+      </div>
+      <div class="cat-body">
+        <div class="consignes-list">
+          ${cat.items.map(it=>`
+            <div class="consigne-item" style="border-left-color:${cat.color}">
+              <div class="consigne-label">${it.label}</div>
+              <div class="consigne-text">${it.text}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function renderCats(id, data){
+  document.getElementById(id).innerHTML = `<div class="cat-list">${data.map((cat,ci)=>`
+    <div class="cat-card" id="${id}-${ci}">
+      <div class="cat-header" onclick="tog('${id}-${ci}')">
+        <div class="cat-dot" style="background:${cat.color}"></div>
+        <div class="cat-title">${cat.name}</div>
+        <span class="cat-count">${cat.items.length} scénarios</span>
+        <span class="cat-arrow">&#8964;</span>
+      </div>
+      <div class="cat-body">
+        <ul class="scenario-list">
+          ${cat.items.map(it=>`
+            <li>
+              <div class="s-info">
+                <div class="s-name">${it.n}</div>
+                <div class="s-desc">${it.d}</div>
+              </div>
+              <span class="occ ${occ(it.lvl)}">${it.occ} occ.</span>
+            </li>`).join('')}
+        </ul>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function tog(id){document.getElementById(id).classList.toggle('open')}
+
+function showTache(id, btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tache-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function showSub(tache, subId, btn){
+  const tacheEl = document.getElementById(tache);
+  tacheEl.querySelectorAll('.sub-section').forEach(s=>s.classList.remove('active'));
+  tacheEl.querySelectorAll('.sub-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(subId).classList.add('active');
+  btn.classList.add('active');
+}
+
+renderTemplates('t1-tpl-list', t1Templates);
+renderConsignes('t1-consignes-list', t1Consignes);
+renderCats('t1-cats-list', t1Cats);
+renderTemplates('t2-tpl-list', t2Templates);
+renderConsignes('t2-consignes-list', t2Consignes);
+renderCats('t2-cats-list', t2Cats);
+renderTemplates('t3-tpl-list', t3Templates);
+renderConsignes('t3-consignes-list', t3Consignes);
+renderCats('t3-cats-list', t3Cats);
+</script>
+</body>
+</html>
