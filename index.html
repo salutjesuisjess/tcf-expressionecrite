@@ -1488,7 +1488,10 @@
 
   // ── Word count & bar ──
   function countWords(text) {
-    return text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+    if (text.trim() === '') return 0;
+    // Ignore tokens made up only of !, ?, : (common in French typography where
+    // a space precedes these marks, e.g. "Vraiment ?" or "Attention !").
+    return text.trim().split(/\s+/).filter(w => !/^[!?:]+$/.test(w)).length;
   }
 
   // ── Trigger save animation ──
@@ -2426,7 +2429,9 @@
     document.getElementById('aiSpinner').classList.add('show');
     document.getElementById('aiRunBtn').disabled = true;
 
-    const prompt = `Tu es un correcteur expert du TCF Canada. Évalue ce texte qui est ${AI_TASK_TYPES[i]}.
+    const prompt = `Tu es un examinateur officiel du TCF Canada, expérimenté et EXIGEANT. Tu corriges avec la même rigueur qu'un vrai examinateur du Centre international d'études pédagogiques : aucune complaisance, aucun bénéfice du doute. Une idée mal exprimée, une erreur de grammaire répétée, un registre inadapté ou un texte hors-sujet doivent être sanctionnés sans indulgence, exactement comme dans un examen réel où la note conditionne un dossier d'immigration.
+
+Évalue ce texte qui est ${AI_TASK_TYPES[i]}.
 
 ${consigne ? `CONSIGNE :\n${consigne}\n\n` : ''}TEXTE DU CANDIDAT (${countWords(responseText)} mots) :
 ${responseText}
@@ -2437,6 +2442,17 @@ ${responseText}
 3. Vocabulaire (étendue et précision)
 4. Grammaire et syntaxe
 
+BARÈME OBLIGATOIRE — utilise cette grille de conversion note/20 → CLB, sans exception, et attribue la note avec la même sévérité qu'un examinateur réel (ne surestime jamais un texte moyen) :
+- 0 à 3/20   → score 1 (CLB 4)
+- 4 à 6/20   → score 2 (CLB 5)
+- 7 à 9/20   → score 3 (CLB 6)
+- 10 à 11/20 → score 4 (CLB 7)
+- 12 à 13/20 → score 5 (CLB 8)
+- 14 à 15/20 → score 6 (CLB 9)
+- 16 à 17/20 → score 7 (CLB 10)
+- 18 à 20/20 → score 8 (CLB 11-12)
+La valeur "score" DOIT correspondre exactement à la valeur "note" selon cette grille (10/20 = score 4 = CLB 7, jamais moins, jamais plus).
+
 IMPORTANT : Réponds UNIQUEMENT avec un objet JSON valide. Pas de texte avant, pas de texte après, pas de balises markdown, pas de backticks. Toutes les valeurs de type string doivent tenir sur une seule ligne (pas de retours à la ligne dans les valeurs).
 
 RÈGLE ABSOLUE pour le champ "erreurs" : chaque élément du tableau DOIT suivre ce format exact et aucun autre :
@@ -2445,14 +2461,14 @@ Exemples valides :
 "**groissessemnt** → grossissement"
 "**afin de ameniser** → afin d'atténuer (élision + mot inexistant)"
 "**se chien** → son chien (mauvais possessif)"
-INTERDIT : ne jamais écrire une phrase descriptive comme "il y a des erreurs de grammaire" ou "le candidat utilise...". Chaque entrée doit montrer le mot erroné en gras, puis →, puis la correction.
+INTERDIT : ne jamais écrire une phrase descriptive comme "il y a des erreurs de grammaire" ou "le candidat utilise...". Chaque entrée doit montrer le mot erroné en gras, puis →, puis la correction. Ne minimise pas le nombre d'erreurs : liste-les toutes, comme le ferait un correcteur rigoureux.
 
 Pour le champ "texte_corrige", entoure chaque mot corrigé avec **mot** pour le mettre en gras.
 
 Format JSON exact :
-{"score":4,"note":"12/20","resume":"...","points_forts":["...","..."],"axes":["...","..."],"erreurs":["**mot_erroné** → correction","**autre_erreur** → correction"],"texte_corrige":"..."}
+{"score":4,"note":"10/20","resume":"...","points_forts":["...","..."],"axes":["...","..."],"erreurs":["**mot_erroné** → correction","**autre_erreur** → correction"],"texte_corrige":"..."}
 
-score : entier de 1 à 8 (1=CLB4, 2=CLB5, 3=CLB6, 4=CLB7, 5=CLB8, 6=CLB9, 7=CLB10, 8=CLB11-12)`;
+score : entier de 1 à 8, déterminé UNIQUEMENT à partir du barème ci-dessus (1=CLB4, 2=CLB5, 3=CLB6, 4=CLB7, 5=CLB8, 6=CLB9, 7=CLB10, 8=CLB11-12).`;
 
     try {
       const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
