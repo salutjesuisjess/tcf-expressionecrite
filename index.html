@@ -2432,6 +2432,36 @@
   };
   let aiTaskIdx = -1;
 
+  const AI_PROVIDERS = {
+    groq: {
+      keyStorage: 'tcf_groq_key',
+      endpoint: 'https://api.groq.com/openai/v1/chat/completions',
+      model: 'openai/gpt-oss-120b',
+      placeholder: 'Clé API Groq  gsk_…',
+      hint: 'Clé <strong>gratuite</strong> (sans carte bancaire) sur <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a> → Create API Key. Elle est sauvegardée localement dans votre navigateur.',
+      errNoKey: 'Entrez votre clé API Groq (gsk_…) ci-dessus.',
+      extraBody: { reasoning_effort: 'medium', reasoning_format: 'hidden' }
+    },
+    gemini: {
+      keyStorage: 'tcf_gemini_key',
+      endpoint: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+      model: 'gemini-3.6-flash',
+      placeholder: 'Clé API Gemini  AIza…',
+      hint: 'Clé <strong>gratuite</strong> (sans carte bancaire) sur <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a> → Create API key. Elle est sauvegardée localement dans votre navigateur. Note : sur le plan gratuit, Google peut utiliser vos textes pour améliorer ses modèles.',
+      errNoKey: 'Entrez votre clé API Gemini (AIza…) ci-dessus.',
+      extraBody: {}
+    }
+  };
+
+  function aiProviderChange() {
+    const p = document.getElementById('aiProviderSelect').value;
+    localStorage.setItem('tcf_ai_provider', p);
+    const cfg = AI_PROVIDERS[p];
+    document.getElementById('aiKeyInput').placeholder = cfg.placeholder;
+    document.getElementById('aiKeyInput').value = localStorage.getItem(cfg.keyStorage) || '';
+    document.getElementById('aiKeyHint').innerHTML = cfg.hint;
+  }
+
   function aiOpen(i) {
     const txt = document.getElementById(`response-${i}`).value.trim();
     if (!txt || txt.length < 15) { alert('Écrivez d\'abord une réponse avant de demander une correction.'); return; }
@@ -2440,8 +2470,10 @@
     document.getElementById('aiErr').classList.remove('show');
     document.getElementById('aiSpinner').classList.remove('show');
     document.getElementById('aiRes').classList.remove('show');
-    const saved = localStorage.getItem('tcf_groq_key') || '';
-    document.getElementById('aiKeyInput').value = saved;
+    const savedProvider = localStorage.getItem('tcf_ai_provider') || 'groq';
+    document.getElementById('aiProviderSelect').value = savedProvider;
+    aiProviderChange();
+    const saved = document.getElementById('aiKeyInput').value;
     document.getElementById('aiOverlay').classList.add('open');
     if (saved) aiRun();
   }
@@ -2452,15 +2484,19 @@
   function aiSaveKey() {
     const k = document.getElementById('aiKeyInput').value.trim();
     if (!k) return;
-    localStorage.setItem('tcf_groq_key', k);
+    const p = document.getElementById('aiProviderSelect').value;
+    localStorage.setItem(AI_PROVIDERS[p].keyStorage, k);
     const b = document.getElementById('aiSaveKeyBtn');
     b.textContent = '✓ Mémorisé'; setTimeout(() => { b.textContent = '💾 Mémoriser'; }, 1600);
   }
 
   async function aiRun() {
+    const provider = document.getElementById('aiProviderSelect').value;
+    const cfg = AI_PROVIDERS[provider];
     const apiKey = document.getElementById('aiKeyInput').value.trim();
-    if (!apiKey) { aiShowErr('Entrez votre clé API Groq (gsk_…) ci-dessus.'); return; }
-    localStorage.setItem('tcf_groq_key', apiKey);
+    if (!apiKey) { aiShowErr(cfg.errNoKey); return; }
+    localStorage.setItem(cfg.keyStorage, apiKey);
+    localStorage.setItem('tcf_ai_provider', provider);
 
     const i = aiTaskIdx;
     const responseText = document.getElementById(`response-${i}`).value.trim();
@@ -2529,19 +2565,18 @@ Format JSON exact :
 score : entier de 1 à 8, déterminé UNIQUEMENT à partir du barème ci-dessus (1=CLB4, 2=CLB5, 3=CLB6, 4=CLB7, 5=CLB8, 6=CLB9, 7=CLB10, 8=CLB11-12).`;
 
     try {
-      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      const res = await fetch(cfg.endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + apiKey
         },
         body: JSON.stringify({
-          model: 'openai/gpt-oss-120b',
+          model: cfg.model,
           max_tokens: 8000,
-          reasoning_effort: 'medium',
-          reasoning_format: 'hidden',
           temperature: 0,
-          messages: [{ role: 'user', content: prompt }]
+          messages: [{ role: 'user', content: prompt }],
+          ...cfg.extraBody
         })
       });
 
@@ -2732,12 +2767,18 @@ score : entier de 1 à 8, déterminé UNIQUEMENT à partir du barème ci-dessus 
     </div>
     <div class="ai-mbody">
 
+      <div class="ai-keyrow" style="margin-bottom:10px">
+        <select id="aiProviderSelect" onchange="aiProviderChange()" style="flex:0 0 auto;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;cursor:pointer">
+          <option value="groq">⚡ Groq — gpt-oss-120b (gratuit)</option>
+          <option value="gemini">✦ Google — Gemini Flash (gratuit)</option>
+        </select>
+      </div>
       <div class="ai-keyrow">
         <input type="password" id="aiKeyInput" placeholder="Clé API Groq  gsk_…" />
         <button id="aiSaveKeyBtn" class="btn-save-task" style="white-space:nowrap" onclick="aiSaveKey()">💾 Mémoriser</button>
         <button id="aiRunBtn" class="btn-ai" onclick="aiRun()">▶ Lancer</button>
       </div>
-      <p class="ai-key-hint">
+      <p class="ai-key-hint" id="aiKeyHint">
         Clé <strong>gratuite</strong> (sans carte bancaire) sur
         <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a> → Create API Key.
         Elle est sauvegardée localement dans votre navigateur.
