@@ -2537,7 +2537,9 @@ score : entier de 1 à 8, déterminé UNIQUEMENT à partir du barème ci-dessus 
         },
         body: JSON.stringify({
           model: 'openai/gpt-oss-120b',
-          max_tokens: 3000,
+          max_tokens: 8000,
+          reasoning_effort: 'medium',
+          reasoning_format: 'hidden',
           temperature: 0,
           messages: [{ role: 'user', content: prompt }]
         })
