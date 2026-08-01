@@ -2515,6 +2515,12 @@ Exemples valides :
 "**se chien** → son chien (mauvais possessif)"
 INTERDIT : ne jamais écrire une phrase descriptive comme "il y a des erreurs de grammaire" ou "le candidat utilise...". Chaque entrée doit montrer le mot erroné en gras, puis →, puis la correction. Ne minimise pas le nombre d'erreurs : liste-les toutes, comme le ferait un correcteur rigoureux.
 
+RÈGLE ABSOLUE anti-contradiction (très important, à respecter scrupuleusement) :
+- Ne modifie et ne signale JAMAIS un mot, un accord (genre/nombre) ou une élision qui est déjà correct dans le texte du candidat. Si un mot est déjà bien orthographié et grammaticalement correct, laisse-le EXACTEMENT tel quel, même si une autre formulation existe.
+- Avant d'ajouter une entrée dans "erreurs" ou de modifier un mot dans "texte_corrige", vérifie mentalement, mot par mot, en comparant strictement avec le TEXTE DU CANDIDAT ci-dessus, que ce mot y est réellement fautif. Si tu as le moindre doute sur le fait qu'une correction soit réellement nécessaire, NE LA FAIS PAS.
+- Le champ "texte_corrige" et le champ "erreurs" DOIVENT être parfaitement cohérents entre eux : chaque mot mis en gras dans "texte_corrige" doit correspondre exactement à une entrée listée dans "erreurs" (même mot, même correction), et inversement, chaque entrée de "erreurs" doit se retrouver appliquée dans "texte_corrige". Aucune divergence n'est tolérée entre les deux champs.
+- Ne change jamais un mot correct simplement par style ou préférence : ton rôle est de corriger des fautes réelles, pas de réécrire le texte.
+
 Pour le champ "texte_corrige", entoure chaque mot corrigé avec **mot** pour le mettre en gras.
 
 Format JSON exact :
@@ -2530,9 +2536,9 @@ score : entier de 1 à 8, déterminé UNIQUEMENT à partir du barème ci-dessus 
           'Authorization': 'Bearer ' + apiKey
         },
         body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
-          max_tokens: 1500,
-          temperature: 0.3,
+          model: 'openai/gpt-oss-120b',
+          max_tokens: 3000,
+          temperature: 0,
           messages: [{ role: 'user', content: prompt }]
         })
       });
