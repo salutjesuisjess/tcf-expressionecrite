@@ -497,6 +497,20 @@
   }
   .btn-save-task:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
+  .btn-save-task-outline {
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green);
+    background: transparent;
+    border: 1.5px solid var(--green);
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-save-task-outline:hover { background: var(--green); color: #fff; transform: translateY(-1px); }
+
   /* ── Save indicator ── */
   .save-indicator {
     font-size: 11px;
@@ -1228,6 +1242,7 @@
             </div>
             <div class="wordcount-wrap">
               <button class="btn-save-task" onclick="archiveTask(0)">💾 Sauvegarder & Reset</button>
+              <button class="btn-save-task-outline" onclick="archiveTask(0, false)" title="Enregistre dans l'historique mais garde le texte à l'écran pour le retravailler">💾 Sauvegarder sans Reset</button>
               <button class="btn-ai" id="ai-btn-0" onclick="aiOpen(0)">✨ Corriger avec IA</button>
               <div class="wc-bar-wrap"><div class="wc-bar" id="bar-0"></div></div>
               <div class="wc-text">
@@ -1285,6 +1300,7 @@
             </div>
             <div class="wordcount-wrap">
               <button class="btn-save-task" onclick="archiveTask(1)">💾 Sauvegarder & Reset</button>
+              <button class="btn-save-task-outline" onclick="archiveTask(1, false)" title="Enregistre dans l'historique mais garde le texte à l'écran pour le retravailler">💾 Sauvegarder sans Reset</button>
               <button class="btn-ai" id="ai-btn-1" onclick="aiOpen(1)">✨ Corriger avec IA</button>
               <div class="wc-bar-wrap"><div class="wc-bar" id="bar-1"></div></div>
               <div class="wc-text">
@@ -1353,6 +1369,7 @@
             </div>
             <div class="wordcount-wrap">
               <button class="btn-save-task" onclick="archiveTask(2)">💾 Sauvegarder & Reset</button>
+              <button class="btn-save-task-outline" onclick="archiveTask(2, false)" title="Enregistre dans l'historique mais garde le texte à l'écran pour le retravailler">💾 Sauvegarder sans Reset</button>
               <button class="btn-ai" id="ai-btn-2" onclick="aiOpen(2)">✨ Corriger avec IA</button>
               <div class="wc-bar-wrap"><div class="wc-bar" id="bar-2"></div></div>
               <div class="wc-text">
@@ -1639,7 +1656,7 @@
   }
 
   // ── Advanced Local History Archive & Reset Features (Silent Auto-Save) ──
-  function archiveTask(i) {
+  function archiveTask(i, doReset = true) {
     let promptText = "";
     if (i === 2) {
       const titre = document.getElementById('prompt-2-titre').value.trim();
@@ -1681,24 +1698,25 @@
     history.unshift(entry);
     localStorage.setItem('tcf_archive_history', JSON.stringify(history));
 
-    // Reset fields for this specific task
-    resetTimer(i);
-    document.getElementById(`response-${i}`).value = '';
-    if (i === 2) {
-      document.getElementById('prompt-2-titre').value = '';
-      document.getElementById('prompt-2-doc1').value = '';
-      document.getElementById('prompt-2-doc2').value = '';
-      localStorage.removeItem('tcf_prompt_2_titre');
-      localStorage.removeItem('tcf_prompt_2_doc1');
-      localStorage.removeItem('tcf_prompt_2_doc2');
-    } else {
-      document.getElementById(`prompt-${i}`).value = '';
-      localStorage.removeItem(`tcf_prompt_${i}`);
+    // Reset fields for this specific task (skipped when doReset is false)
+    if (doReset) {
+      resetTimer(i);
+      document.getElementById(`response-${i}`).value = '';
+      if (i === 2) {
+        document.getElementById('prompt-2-titre').value = '';
+        document.getElementById('prompt-2-doc1').value = '';
+        document.getElementById('prompt-2-doc2').value = '';
+        localStorage.removeItem('tcf_prompt_2_titre');
+        localStorage.removeItem('tcf_prompt_2_doc1');
+        localStorage.removeItem('tcf_prompt_2_doc2');
+      } else {
+        document.getElementById(`prompt-${i}`).value = '';
+        localStorage.removeItem(`tcf_prompt_${i}`);
+      }
+      localStorage.removeItem(`tcf_response_${i}`);
+      localStorage.removeItem(`tcf_timer_${i}`);
+      aiLastResult[i] = null;
     }
-    localStorage.removeItem(`tcf_response_${i}`);
-    localStorage.removeItem(`tcf_timer_${i}`);
-
-    aiLastResult[i] = null;
     updateWordCount(i);
     loadHistory();
     triggerSaveIndicator(); // Visual cue in header instead of a blocking popup
